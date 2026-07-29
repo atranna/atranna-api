@@ -14,7 +14,7 @@ func GetInterfacesByDeviceID(c *gin.Context) {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
 		return
 	}
-	
+
 	device_id, err := strconv.Atoi(c.Param("id"))
 
 	if err != nil {

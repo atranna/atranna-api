@@ -9,6 +9,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 )
+
 func New() *gin.Engine {
 	if os.Getenv("DEBUG") == "true" {
 		gin.SetMode(gin.DebugMode)
@@ -43,7 +44,6 @@ func New() *gin.Engine {
 	r.GET("/api/v1/networks/:id", v1_networks.GetNetwork)
 	r.POST("/api/v1/networks/", v1_networks.AddNetwork)
 	r.DELETE("/api/v1/networks/:id", v1_networks.DeleteNetwork)
-	
-	
+
 	return r
 }

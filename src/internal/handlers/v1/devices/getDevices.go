@@ -13,6 +13,6 @@ func GetDevices(c *gin.Context) {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
 		return
 	}
-	
+
 	c.JSON(http.StatusOK, store.Devices)
 }
