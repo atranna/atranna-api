@@ -44,7 +44,6 @@ func DeleteInterface(id int) (models.Interface, bool) {
 	return models.Interface{}, false
 }
 
-
 func DeleteInterfacesByDeviceID(device_id int) {
 	filtered := make([]models.Interface, 0, len(Interfaces))
 	for _, interf := range Interfaces {

@@ -1,7 +1,7 @@
 package models
 
 type Device struct {
-	ID       int `json:"id"`
+	ID       int    `json:"id"`
 	Hostname string `json:"hostname"`
 	IP       string `json:"ip"`
 	Vendor   string `json:"vendor"`
