@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"atranna-api/src/internal/helpers"
 	"atranna-api/src/internal/store"
 	"net/http"
 	"strconv"
@@ -9,6 +10,11 @@ import (
 )
 
 func GetInterfacesByDeviceID(c *gin.Context) {
+	if !helpers.CheckAuthorization(c.GetHeader("Authorization")) {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+		return
+	}
+	
 	device_id, err := strconv.Atoi(c.Param("id"))
 
 	if err != nil {

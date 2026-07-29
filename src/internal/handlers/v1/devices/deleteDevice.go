@@ -1,6 +1,7 @@
 package devices
 
 import (
+	"atranna-api/src/internal/helpers"
 	"atranna-api/src/internal/store"
 	"net/http"
 	"strconv"
@@ -9,6 +10,10 @@ import (
 )
 
 func DeleteDevice(c *gin.Context) {
+	if !helpers.CheckAuthorization(c.GetHeader("Authorization")) {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+		return
+	}	
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid id"})
