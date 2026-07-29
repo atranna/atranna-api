@@ -8,18 +8,19 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func GetDevice(c *gin.Context) {
+func GetInterface(c *gin.Context) {
+
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid id"})
 		return
 	}
 
-	device, found := store.GetDeviceByID(id)
+	interf, found := store.GetInterfaceByID(id)
 	if !found {
-		c.JSON(http.StatusNotFound, gin.H{"error": "device not found"})
+		c.JSON(http.StatusNotFound, gin.H{"error": "interface not found"})
 		return
 	}
 
-	c.JSON(http.StatusOK, device)
+	c.JSON(http.StatusOK, interf)
 }

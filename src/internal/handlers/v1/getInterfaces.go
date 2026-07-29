@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func GetDevices(c *gin.Context) {
-	
-	c.JSON(http.StatusOK, store.Devices)
+func GetInterfaces(c *gin.Context) {
+
+	c.JSON(http.StatusOK, store.Interfaces)
 }
