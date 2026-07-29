@@ -4,6 +4,7 @@ import (
 	"atranna-api/src/internal/handlers"
 	v1_devices "atranna-api/src/internal/handlers/v1/devices"
 	v1_interfaces "atranna-api/src/internal/handlers/v1/devices/interfaces"
+	v1_networks "atranna-api/src/internal/handlers/v1/networks"
 	"os"
 
 	"github.com/gin-gonic/gin"
@@ -35,6 +36,13 @@ func New() *gin.Engine {
 	// Interfaces with device ID
 	r.GET("/api/v1/devices/:id/interfaces/", v1_interfaces.GetInterfacesByDeviceID)
 	r.POST("/api/v1/devices/:id/interfaces/", v1_interfaces.AddInterface)
+
+	// Networks
+
+	r.GET("/api/v1/networks/", v1_networks.GetNetworks)
+	r.GET("/api/v1/networks/:id", v1_networks.GetNetwork)
+	r.POST("/api/v1/networks/", v1_networks.AddNetwork)
+	r.DELETE("/api/v1/networks/:id", v1_networks.DeleteNetwork)
 	
 	
 	return r
