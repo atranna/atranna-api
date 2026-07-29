@@ -1,15 +1,10 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
+	"atranna-api/src/internal/router"
 )
 
 func main() {
-	router := gin.Default()
-	router.GET("/ping", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "pong",
-		})
-	})
+	router := router.New()
 	router.Run("0.0.0.0:8080")
 }
