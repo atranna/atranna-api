@@ -14,17 +14,18 @@ import (
 )
 
 func TestInterfaces(t *testing.T) {
+	t.Setenv("DEV_DISABLE_AUTH", "true")
+
 	store.Devices = []models.Device{}
 	store.Interfaces = []models.Interface{}
 
 	router := gin.Default()
 	router.POST("/devices", devices.AddDevice)
 
-	router.POST("/devices/:id/interfaces", AddInterface)
+	router.POST("/interfaces/", AddInterface)
 	router.GET("/interfaces", GetInterfaces)
 	router.GET("/interfaces/:id", GetInterface)
-	router.GET("/devices/:id/interfaces", GetInterfacesByDeviceID)
-	router.DELETE("/interfaces/:interface_id", DeleteInterface)
+	router.DELETE("/interfaces/:id", DeleteInterface)
 
 	// Add a device
 	body := map[string]any{
@@ -63,7 +64,7 @@ func TestInterfaces(t *testing.T) {
 		t.Fatalf("failed to marshal request body: %v", err)
 	}
 
-	req = httptest.NewRequest(http.MethodPost, "/devices/1/interfaces", bytes.NewReader(bodyJSON))
+	req = httptest.NewRequest(http.MethodPost, "/interfaces/", bytes.NewReader(bodyJSON))
 	req.Header.Set("Content-Type", "application/json")
 	w = httptest.NewRecorder()
 
@@ -83,16 +84,6 @@ func TestInterfaces(t *testing.T) {
 		t.Fatalf("expected 200, got %d", w.Code)
 	}
 
-	// Get interfaces by device ID
-	req = httptest.NewRequest(http.MethodGet, "/devices/1/interfaces", nil)
-	w = httptest.NewRecorder()
-
-	router.ServeHTTP(w, req)
-
-	if w.Code != http.StatusOK {
-		t.Fatalf("expected 200, got %d", w.Code)
-	}
-
 	// Delete interface by ID
 	req = httptest.NewRequest(http.MethodDelete, "/interfaces/1", nil)
 	w = httptest.NewRecorder()
@@ -101,5 +92,33 @@ func TestInterfaces(t *testing.T) {
 
 	if w.Code != http.StatusOK {
 		t.Fatalf("expected 200, got %d", w.Code)
+	}
+}
+
+func TestAddInterfaceRequiresDeviceID(t *testing.T) {
+	t.Setenv("DEV_DISABLE_AUTH", "true")
+
+	store.Devices = []models.Device{}
+	store.Interfaces = []models.Interface{}
+
+	router := gin.Default()
+	router.POST("/interfaces/", AddInterface)
+
+	body := map[string]any{
+		"name": "eth0",
+	}
+	bodyJSON, err := json.Marshal(body)
+	if err != nil {
+		t.Fatalf("failed to marshal request body: %v", err)
+	}
+
+	req := httptest.NewRequest(http.MethodPost, "/interfaces/", bytes.NewReader(bodyJSON))
+	req.Header.Set("Content-Type", "application/json")
+	w := httptest.NewRecorder()
+
+	router.ServeHTTP(w, req)
+
+	if w.Code != http.StatusBadRequest {
+		t.Fatalf("expected 400, got %d", w.Code)
 	}
 }
