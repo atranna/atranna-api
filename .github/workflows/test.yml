@@ -15,4 +15,6 @@ jobs:
           go-version-file: go.mod
 
       - name: Run tests
+        env:
+          DEV_DISABLE_AUTH: true
         run: go test ./...
