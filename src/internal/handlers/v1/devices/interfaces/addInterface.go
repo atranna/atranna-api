@@ -26,5 +26,5 @@ func AddInterface(c *gin.Context) {
 	}
 
 	addedInterface := store.AddInterface(newInterface, newInterface.Device_ID)
-	c.JSON(http.StatusOK, addedInterface)
+	c.JSON(http.StatusCreated, addedInterface)
 }

@@ -21,5 +21,5 @@ func AddDevice(c *gin.Context) {
 		return
 	}
 	AddedDevice := store.AddDevice(newDevice)
-	c.JSON(http.StatusOK, AddedDevice)
+	c.JSON(http.StatusCreated, AddedDevice)
 }
