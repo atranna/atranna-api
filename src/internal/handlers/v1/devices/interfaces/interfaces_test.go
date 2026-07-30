@@ -14,6 +14,8 @@ import (
 )
 
 func TestInterfaces(t *testing.T) {
+	t.Setenv("DEV_DISABLE_AUTH", "true")
+
 	store.Devices = []models.Device{}
 	store.Interfaces = []models.Interface{}
 
@@ -23,7 +25,7 @@ func TestInterfaces(t *testing.T) {
 	router.POST("/interfaces/", AddInterface)
 	router.GET("/interfaces", GetInterfaces)
 	router.GET("/interfaces/:id", GetInterface)
-	router.DELETE("/interfaces/:interface_id", DeleteInterface)
+	router.DELETE("/interfaces/:id", DeleteInterface)
 
 	// Add a device
 	body := map[string]any{
@@ -103,7 +105,6 @@ func TestAddInterfaceRequiresDeviceID(t *testing.T) {
 	router.POST("/interfaces/", AddInterface)
 
 	body := map[string]any{
-		"device_id": 1,
 		"name": "eth0",
 	}
 	bodyJSON, err := json.Marshal(body)
@@ -118,6 +119,6 @@ func TestAddInterfaceRequiresDeviceID(t *testing.T) {
 	router.ServeHTTP(w, req)
 
 	if w.Code != http.StatusBadRequest {
-		t.Fatalf("expected 200, got %d", w.Code)
+		t.Fatalf("expected 400, got %d", w.Code)
 	}
 }
