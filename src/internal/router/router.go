@@ -25,21 +25,21 @@ func New() *gin.Engine {
 	// Devices
 	r.GET("/api/v1/devices", v1_devices.GetDevices)
 	r.GET("/api/v1/devices/:id", v1_devices.GetDevice)
-	r.POST("/api/v1/devices/", v1_devices.AddDevice)
+	r.POST("/api/v1/devices", v1_devices.AddDevice)
 	r.DELETE("/api/v1/devices/:id", v1_devices.DeleteDevice)
 
 	// Interfaces
 
-	r.GET("/api/v1/interfaces/", v1_interfaces.GetInterfaces)
+	r.GET("/api/v1/interfaces", v1_interfaces.GetInterfaces)
 	r.GET("/api/v1/interfaces/:id", v1_interfaces.GetInterface)
-	r.POST("/api/v1/interfaces/", v1_interfaces.AddInterface)
+	r.POST("/api/v1/interfaces", v1_interfaces.AddInterface)
 	r.DELETE("/api/v1/interfaces/:id", v1_interfaces.DeleteInterface)
 
 	// Networks
 
-	r.GET("/api/v1/networks/", v1_networks.GetNetworks)
+	r.GET("/api/v1/networks", v1_networks.GetNetworks)
 	r.GET("/api/v1/networks/:id", v1_networks.GetNetwork)
-	r.POST("/api/v1/networks/", v1_networks.AddNetwork)
+	r.POST("/api/v1/networks", v1_networks.AddNetwork)
 	r.DELETE("/api/v1/networks/:id", v1_networks.DeleteNetwork)
 
 	return r
