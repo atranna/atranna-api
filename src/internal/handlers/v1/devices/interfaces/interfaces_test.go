@@ -100,9 +100,10 @@ func TestAddInterfaceRequiresDeviceID(t *testing.T) {
 	store.Interfaces = []models.Interface{}
 
 	router := gin.Default()
-	router.POST("/devices/:id/interfaces", AddInterface)
+	router.POST("/interfaces/", AddInterface)
 
 	body := map[string]any{
+		"device_id": 1,
 		"name": "eth0",
 	}
 	bodyJSON, err := json.Marshal(body)
@@ -110,7 +111,7 @@ func TestAddInterfaceRequiresDeviceID(t *testing.T) {
 		t.Fatalf("failed to marshal request body: %v", err)
 	}
 
-	req := httptest.NewRequest(http.MethodPost, "/devices/1/interfaces", bytes.NewReader(bodyJSON))
+	req := httptest.NewRequest(http.MethodPost, "/interfaces/", bytes.NewReader(bodyJSON))
 	req.Header.Set("Content-Type", "application/json")
 	w := httptest.NewRecorder()
 
