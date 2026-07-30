@@ -5,7 +5,6 @@ import (
 	"atranna-api/src/internal/models"
 	"atranna-api/src/internal/store"
 	"net/http"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -20,15 +19,12 @@ func AddInterface(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	device_id, err := strconv.Atoi(c.Param("id"))
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid id"})
+
+	if newInterface.Device_ID == 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "device_id is required"})
 		return
 	}
-	if _, found := store.GetDeviceByID(device_id); !found {
-		c.JSON(http.StatusNotFound, gin.H{"error": "device not found"})
-		return
-	}
-	addedInterface := store.AddInterface(newInterface, device_id)
+
+	addedInterface := store.AddInterface(newInterface, newInterface.Device_ID)
 	c.JSON(http.StatusOK, addedInterface)
 }

@@ -31,12 +31,9 @@ func New() *gin.Engine {
 	// Interfaces
 
 	r.GET("/api/v1/interfaces/", v1_interfaces.GetInterfaces)
-	r.GET("/api/v1/interfaces/:interface_id", v1_interfaces.GetInterface)
-	r.DELETE("/api/v1/interfaces/:interface_id", v1_interfaces.DeleteInterface)
-
-	// Interfaces with device ID
-	r.GET("/api/v1/devices/:id/interfaces/", v1_interfaces.GetInterfacesByDeviceID)
-	r.POST("/api/v1/devices/:id/interfaces/", v1_interfaces.AddInterface)
+	r.GET("/api/v1/interfaces/:id", v1_interfaces.GetInterface)
+	r.POST("/api/v1/interfaces/", v1_interfaces.AddInterface)
+	r.DELETE("/api/v1/interfaces/:id", v1_interfaces.DeleteInterface)
 
 	// Networks
 
