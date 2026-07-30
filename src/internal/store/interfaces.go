@@ -37,7 +37,6 @@ func DeleteInterface(id int) (models.Interface, bool) {
 	for i, interf := range Interfaces {
 		if interf.ID == id {
 			Interfaces = append(Interfaces[:i], Interfaces[i+1:]...)
-			DeleteInterfacesByDeviceID(interf.Device_ID)
 			return interf, true
 		}
 	}
