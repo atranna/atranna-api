@@ -52,11 +52,11 @@ func TestInterfaces(t *testing.T) {
 	// Add an interface
 	body = map[string]any{
 		"device_id":   1,
-		"name":     "eth0",
-		"ip_address": "192.168.1.100",
+		"name":        "eth0",
+		"ip_address":  "192.168.1.100",
 		"mac_address": "00:11:22:33:44:55",
-		"state":      "up",
-		"speed":      1000,
+		"state":       "up",
+		"speed":       1000,
 	}
 	bodyJSON, err = json.Marshal(body)
 	if err != nil {

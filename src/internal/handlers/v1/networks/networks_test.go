@@ -23,10 +23,10 @@ func TestNetworks(t *testing.T) {
 
 	// Add a network
 	body := map[string]any{
-		"name": "Test-Network-01",
-		"cidr": "192.168.1.0/24",
+		"name":    "Test-Network-01",
+		"cidr":    "192.168.1.0/24",
 		"gateway": "192.168.1.1",
-		"vlan": 1,
+		"vlan":    1,
 	}
 	bodyJSON, err := json.Marshal(body)
 	if err != nil {
