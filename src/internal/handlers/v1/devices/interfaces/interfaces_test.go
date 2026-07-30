@@ -118,6 +118,6 @@ func TestAddInterfaceRequiresDeviceID(t *testing.T) {
 	router.ServeHTTP(w, req)
 
 	if w.Code != http.StatusBadRequest {
-		t.Fatalf("expected 400, got %d", w.Code)
+		t.Fatalf("expected 200, got %d", w.Code)
 	}
 }
