@@ -20,5 +20,5 @@ func AddNetwork(c *gin.Context) {
 		return
 	}
 	AddedNetwork := store.AddNetwork(newNetwork)
-	c.JSON(http.StatusOK, AddedNetwork)
+	c.JSON(http.StatusCreated, AddedNetwork)
 }
