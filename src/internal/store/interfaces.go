@@ -1,17 +1,23 @@
 package store
 
-import "atranna-api/src/internal/models"
+import (
+	"atranna-api/src/internal/models"
+	"fmt"
+)
 
 var nextInterfaceID int = 1
 
 var Interfaces = []models.Interface{}
 
-func AddInterface(interf models.Interface, device_id int) models.Interface {
+func AddInterface(interf models.Interface, device_id int) (models.Interface, error) {
+	if !DeviceExists(device_id) {
+		return models.Interface{}, fmt.Errorf("Device with ID %d does not exist", device_id)
+	}
 	interf.Device_ID = device_id
 	interf.ID = nextInterfaceID
 	nextInterfaceID++
 	Interfaces = append(Interfaces, interf)
-	return interf
+	return interf, nil
 }
 
 func GetInterfaceByID(id int) (models.Interface, bool) {

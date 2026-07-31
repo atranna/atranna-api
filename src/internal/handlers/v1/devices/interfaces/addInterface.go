@@ -20,6 +20,10 @@ func AddInterface(c *gin.Context) {
 		return
 	}
 
-	addedInterface := store.AddInterface(newInterface, newInterface.Device_ID)
+	addedInterface, error := store.AddInterface(newInterface, newInterface.Device_ID)
+	if error != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": error.Error()})
+		return
+	}
 	c.JSON(http.StatusCreated, addedInterface)
 }
