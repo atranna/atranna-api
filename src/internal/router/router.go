@@ -5,6 +5,7 @@ import (
 	v1_devices "atranna-api/src/internal/handlers/v1/devices"
 	v1_interfaces "atranna-api/src/internal/handlers/v1/devices/interfaces"
 	v1_networks "atranna-api/src/internal/handlers/v1/networks"
+	"atranna-api/src/internal/middlewares"
 	"os"
 
 	"github.com/gin-gonic/gin"
@@ -20,7 +21,7 @@ func New() *gin.Engine {
 
 	r.GET("/ping", handlers.Ping)
 
-	apiV1 := r.Group("/api/v1")
+	apiV1 := r.Group("/api/v1", middlewares.AuthMiddleware())
 
 	// Devices
 	apiV1.GET("/devices", v1_devices.GetDevices)
