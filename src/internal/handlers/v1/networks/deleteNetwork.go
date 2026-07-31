@@ -1,21 +1,20 @@
 package networks
 
 import (
-	"atranna-api/src/internal/store"
 	"net/http"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
 
-func DeleteNetwork(c *gin.Context) {
+func (h *Handler) Delete(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid id"})
 		return
 	}
 
-	_, deleted := store.DeleteNetwork(id)
+	_, deleted := h.networks.Delete(id)
 	if !deleted {
 		c.JSON(http.StatusNotFound, gin.H{"error": "network not found"})
 		return

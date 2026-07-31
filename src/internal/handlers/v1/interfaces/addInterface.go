@@ -1,14 +1,14 @@
 package interfaces
 
 import (
-	"atranna-api/src/internal/models"
-	"atranna-api/src/internal/store"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+
+	"atranna-api/src/internal/models"
 )
 
-func AddInterface(c *gin.Context) {
+func (h *Handler) Add(c *gin.Context) {
 	var newInterface models.Interface
 	if err := c.ShouldBindJSON(&newInterface); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -20,9 +20,9 @@ func AddInterface(c *gin.Context) {
 		return
 	}
 
-	addedInterface, error := store.AddInterface(newInterface)
-	if error != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": error.Error()})
+	addedInterface, err := h.interfaces.Add(newInterface)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 	c.JSON(http.StatusCreated, addedInterface)

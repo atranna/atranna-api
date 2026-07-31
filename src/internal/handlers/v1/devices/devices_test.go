@@ -1,8 +1,7 @@
 package devices
 
 import (
-	"atranna-api/src/internal/models"
-	"atranna-api/src/internal/store"
+	"atranna-api/src/internal/repository/memory"
 	"bytes"
 	"encoding/json"
 	"net/http"
@@ -13,13 +12,14 @@ import (
 )
 
 func TestDevices(t *testing.T) {
-	store.Devices = []models.Device{}
+	deviceRepo := memory.NewDeviceRepository()
+	handler := NewHandler(deviceRepo, memory.NewInterfaceRepository(deviceRepo))
 
 	router := gin.Default()
-	router.POST("/devices", AddDevice)
-	router.GET("/devices", GetDevices)
-	router.GET("/devices/:id", GetDevice)
-	router.DELETE("/devices/:id", DeleteDevice)
+	router.POST("/devices", handler.Add)
+	router.GET("/devices", handler.GetDevices)
+	router.GET("/devices/:id", handler.GetDevice)
+	router.DELETE("/devices/:id", handler.Delete)
 
 	// Add a device
 	body := map[string]any{
