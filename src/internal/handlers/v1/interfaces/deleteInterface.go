@@ -15,11 +15,11 @@ func DeleteInterface(c *gin.Context) {
 		return
 	}
 
-	interf, deleted := store.DeleteInterface(id)
+	_, deleted := store.DeleteInterface(id)
 	if !deleted {
 		c.JSON(http.StatusNotFound, gin.H{"error": "interface not found"})
 		return
 	}
 
-	c.JSON(http.StatusOK, interf)
+	c.Status(http.StatusNoContent)
 }

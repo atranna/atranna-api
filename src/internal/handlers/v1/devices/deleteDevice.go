@@ -15,11 +15,11 @@ func DeleteDevice(c *gin.Context) {
 		return
 	}
 
-	device, deleted := store.DeleteDevice(id)
+	_, deleted := store.DeleteDevice(id)
 	if !deleted {
 		c.JSON(http.StatusNotFound, gin.H{"error": "device not found"})
 		return
 	}
 
-	c.JSON(http.StatusOK, device)
+	c.Status(http.StatusNoContent)
 }

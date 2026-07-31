@@ -15,11 +15,11 @@ func DeleteNetwork(c *gin.Context) {
 		return
 	}
 
-	network, deleted := store.DeleteNetwork(id)
+	_, deleted := store.DeleteNetwork(id)
 	if !deleted {
 		c.JSON(http.StatusNotFound, gin.H{"error": "network not found"})
 		return
 	}
 
-	c.JSON(http.StatusOK, network)
+	c.Status(http.StatusNoContent)
 }
