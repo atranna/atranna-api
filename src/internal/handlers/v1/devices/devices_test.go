@@ -13,8 +13,6 @@ import (
 )
 
 func TestDevices(t *testing.T) {
-	t.Setenv("DEV_DISABLE_AUTH", "true")
-
 	store.Devices = []models.Device{}
 
 	router := gin.Default()
