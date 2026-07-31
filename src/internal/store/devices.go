@@ -35,3 +35,12 @@ func DeleteDevice(id int) (models.Device, bool) {
 
 	return models.Device{}, false
 }
+
+func DeviceExists(id int) bool {
+	for _, device := range Devices {
+		if device.ID == id {
+			return true
+		}
+	}
+	return false
+}
