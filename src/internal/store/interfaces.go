@@ -10,7 +10,7 @@ var nextInterfaceID int = 1
 var Interfaces = []models.Interface{}
 
 func AddInterface(interf models.Interface) (models.Interface, error) {
-	if !DeviceExists(interf.Device_ID) {
+	if _, exists := GetDeviceByID(interf.Device_ID); !exists {
 		return models.Interface{}, fmt.Errorf("Device with ID %d does not exist", interf.Device_ID)
 	}
 	interf.ID = nextInterfaceID

@@ -3,7 +3,7 @@ package router
 import (
 	"atranna-api/src/internal/handlers"
 	v1_devices "atranna-api/src/internal/handlers/v1/devices"
-	v1_interfaces "atranna-api/src/internal/handlers/v1/devices/interfaces"
+	v1_interfaces "atranna-api/src/internal/handlers/v1/interfaces"
 	v1_networks "atranna-api/src/internal/handlers/v1/networks"
 	"atranna-api/src/internal/middlewares"
 	"os"
