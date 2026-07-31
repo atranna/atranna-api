@@ -1,4 +1,4 @@
-package v1
+package interfaces
 
 import (
 	devices "atranna-api/src/internal/handlers/v1/devices"
