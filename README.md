@@ -2,6 +2,10 @@
 
 API backend for Atranna. Built with [Go](https://go.dev/) and [Gin](https://gin-gonic.com/).
 
+<a href="https://github.com/atranna/atranna-api/actions/workflows/test.yml">
+<img src="https://img.shields.io/github/actions/workflow/status/atranna/atranna-api/test.yml?style=for-the-badge&logo=githubactions&logoColor=white&label=Tests" alt="Tests"/>
+</a>
+
 #
 
 > [!WARNING]
