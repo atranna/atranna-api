@@ -14,8 +14,6 @@ import (
 )
 
 func TestInterfaces(t *testing.T) {
-	t.Setenv("DEV_DISABLE_AUTH", "true")
-
 	store.Devices = []models.Device{}
 	store.Interfaces = []models.Interface{}
 
@@ -96,8 +94,6 @@ func TestInterfaces(t *testing.T) {
 }
 
 func TestAddInterfaceRequiresDeviceID(t *testing.T) {
-	t.Setenv("DEV_DISABLE_AUTH", "true")
-
 	store.Devices = []models.Device{}
 	store.Interfaces = []models.Interface{}
 

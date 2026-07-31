@@ -5,6 +5,7 @@ import (
 	v1_devices "atranna-api/src/internal/handlers/v1/devices"
 	v1_interfaces "atranna-api/src/internal/handlers/v1/devices/interfaces"
 	v1_networks "atranna-api/src/internal/handlers/v1/networks"
+	"atranna-api/src/internal/middlewares"
 	"os"
 
 	"github.com/gin-gonic/gin"
@@ -20,27 +21,25 @@ func New() *gin.Engine {
 
 	r.GET("/ping", handlers.Ping)
 
-	// API v1 routes
+	apiV1 := r.Group("/api/v1", middlewares.AuthMiddleware())
 
 	// Devices
-	r.GET("/api/v1/devices", v1_devices.GetDevices)
-	r.GET("/api/v1/devices/:id", v1_devices.GetDevice)
-	r.POST("/api/v1/devices", v1_devices.AddDevice)
-	r.DELETE("/api/v1/devices/:id", v1_devices.DeleteDevice)
+	apiV1.GET("/devices", v1_devices.GetDevices)
+	apiV1.GET("/devices/:id", v1_devices.GetDevice)
+	apiV1.POST("/devices", v1_devices.AddDevice)
+	apiV1.DELETE("/devices/:id", v1_devices.DeleteDevice)
 
 	// Interfaces
-
-	r.GET("/api/v1/interfaces", v1_interfaces.GetInterfaces)
-	r.GET("/api/v1/interfaces/:id", v1_interfaces.GetInterface)
-	r.POST("/api/v1/interfaces", v1_interfaces.AddInterface)
-	r.DELETE("/api/v1/interfaces/:id", v1_interfaces.DeleteInterface)
+	apiV1.GET("/interfaces", v1_interfaces.GetInterfaces)
+	apiV1.GET("/interfaces/:id", v1_interfaces.GetInterface)
+	apiV1.POST("/interfaces", v1_interfaces.AddInterface)
+	apiV1.DELETE("/interfaces/:id", v1_interfaces.DeleteInterface)
 
 	// Networks
-
-	r.GET("/api/v1/networks", v1_networks.GetNetworks)
-	r.GET("/api/v1/networks/:id", v1_networks.GetNetwork)
-	r.POST("/api/v1/networks", v1_networks.AddNetwork)
-	r.DELETE("/api/v1/networks/:id", v1_networks.DeleteNetwork)
+	apiV1.GET("/networks", v1_networks.GetNetworks)
+	apiV1.GET("/networks/:id", v1_networks.GetNetwork)
+	apiV1.POST("/networks", v1_networks.AddNetwork)
+	apiV1.DELETE("/networks/:id", v1_networks.DeleteNetwork)
 
 	return r
 }
