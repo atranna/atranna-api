@@ -1,7 +1,7 @@
 package models
 
 type Interface struct {
-	ID          int    `json:"id" binding:"required"`
+	ID          int    `json:"id"`
 	DeviceID   int    `json:"device_id" binding:"required"`
 	IPAddress  string `json:"ip_address" binding:"required"`
 	MACAddress string `json:"mac_address"`
