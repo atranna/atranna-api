@@ -9,11 +9,10 @@ var nextInterfaceID int = 1
 
 var Interfaces = []models.Interface{}
 
-func AddInterface(interf models.Interface, device_id int) (models.Interface, error) {
-	if !DeviceExists(device_id) {
-		return models.Interface{}, fmt.Errorf("Device with ID %d does not exist", device_id)
+func AddInterface(interf models.Interface) (models.Interface, error) {
+	if !DeviceExists(interf.Device_ID) {
+		return models.Interface{}, fmt.Errorf("Device with ID %d does not exist", interf.Device_ID)
 	}
-	interf.Device_ID = device_id
 	interf.ID = nextInterfaceID
 	nextInterfaceID++
 	Interfaces = append(Interfaces, interf)
