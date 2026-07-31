@@ -10,8 +10,8 @@ var nextInterfaceID int = 1
 var Interfaces = []models.Interface{}
 
 func AddInterface(interf models.Interface) (models.Interface, error) {
-	if _, exists := GetDeviceByID(interf.Device_ID); !exists {
-		return models.Interface{}, fmt.Errorf("Device with ID %d does not exist", interf.Device_ID)
+	if _, exists := GetDeviceByID(interf.DeviceID); !exists {
+		return models.Interface{}, fmt.Errorf("Device with ID %d does not exist", interf.DeviceID)
 	}
 	interf.ID = nextInterfaceID
 	nextInterfaceID++
@@ -31,7 +31,7 @@ func GetInterfaceByID(id int) (models.Interface, bool) {
 func GetInterfacesByDeviceID(device_id int) []models.Interface {
 	result := []models.Interface{}
 	for _, interf := range Interfaces {
-		if interf.Device_ID == device_id {
+		if interf.DeviceID == device_id {
 			result = append(result, interf)
 		}
 	}
@@ -51,7 +51,7 @@ func DeleteInterface(id int) (models.Interface, bool) {
 func DeleteInterfacesByDeviceID(device_id int) {
 	filtered := make([]models.Interface, 0, len(Interfaces))
 	for _, interf := range Interfaces {
-		if interf.Device_ID != device_id {
+		if interf.DeviceID != device_id {
 			filtered = append(filtered, interf)
 		}
 	}

@@ -15,7 +15,7 @@ func AddInterface(c *gin.Context) {
 		return
 	}
 
-	if newInterface.Device_ID == 0 {
+	if newInterface.DeviceID == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "device_id is required"})
 		return
 	}
