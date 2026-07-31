@@ -1,19 +1,19 @@
 package networks
 
 import (
-	"atranna-api/src/internal/models"
-	"atranna-api/src/internal/store"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+
+	"atranna-api/src/internal/models"
 )
 
-func AddNetwork(c *gin.Context) {
+func (h *Handler) Add(c *gin.Context) {
 	var newNetwork models.Network
 	if err := c.ShouldBindJSON(&newNetwork); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	AddedNetwork := store.AddNetwork(newNetwork)
-	c.JSON(http.StatusCreated, AddedNetwork)
+	addedNetwork := h.networks.Add(newNetwork)
+	c.JSON(http.StatusCreated, addedNetwork)
 }

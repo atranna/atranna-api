@@ -1,8 +1,7 @@
 package networks
 
 import (
-	"atranna-api/src/internal/models"
-	"atranna-api/src/internal/store"
+	"atranna-api/src/internal/repository/memory"
 	"bytes"
 	"encoding/json"
 	"net/http"
@@ -13,13 +12,13 @@ import (
 )
 
 func TestNetworks(t *testing.T) {
-	store.Networks = []models.Network{}
+	handler := NewHandler(memory.NewNetworkRepository())
 
 	router := gin.Default()
-	router.POST("/networks", AddNetwork)
-	router.GET("/networks", GetNetworks)
-	router.GET("/networks/:id", GetNetwork)
-	router.DELETE("/networks/:id", DeleteNetwork)
+	router.POST("/networks", handler.Add)
+	router.GET("/networks", handler.GetNetworks)
+	router.GET("/networks/:id", handler.GetNetwork)
+	router.DELETE("/networks/:id", handler.Delete)
 
 	// Add a network
 	body := map[string]any{

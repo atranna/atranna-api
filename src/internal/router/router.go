@@ -6,6 +6,7 @@ import (
 	v1_interfaces "atranna-api/src/internal/handlers/v1/interfaces"
 	v1_networks "atranna-api/src/internal/handlers/v1/networks"
 	"atranna-api/src/internal/middlewares"
+	"atranna-api/src/internal/repository/memory"
 	"os"
 
 	"github.com/gin-gonic/gin"
@@ -21,25 +22,33 @@ func New() *gin.Engine {
 
 	r.GET("/ping", handlers.Ping)
 
+	deviceRepo := memory.NewDeviceRepository()
+	interfaceRepo := memory.NewInterfaceRepository(deviceRepo)
+	networkRepo := memory.NewNetworkRepository()
+
+	devicesHandler := v1_devices.NewHandler(deviceRepo, interfaceRepo)
+	interfacesHandler := v1_interfaces.NewHandler(interfaceRepo)
+	networksHandler := v1_networks.NewHandler(networkRepo)
+
 	apiV1 := r.Group("/api/v1", middlewares.AuthMiddleware())
 
 	// Devices
-	apiV1.GET("/devices", v1_devices.GetDevices)
-	apiV1.GET("/devices/:id", v1_devices.GetDevice)
-	apiV1.POST("/devices", v1_devices.AddDevice)
-	apiV1.DELETE("/devices/:id", v1_devices.DeleteDevice)
+	apiV1.GET("/devices", devicesHandler.GetDevices)
+	apiV1.GET("/devices/:id", devicesHandler.GetDevice)
+	apiV1.POST("/devices", devicesHandler.Add)
+	apiV1.DELETE("/devices/:id", devicesHandler.Delete)
 
 	// Interfaces
-	apiV1.GET("/interfaces", v1_interfaces.GetInterfaces)
-	apiV1.GET("/interfaces/:id", v1_interfaces.GetInterface)
-	apiV1.POST("/interfaces", v1_interfaces.AddInterface)
-	apiV1.DELETE("/interfaces/:id", v1_interfaces.DeleteInterface)
+	apiV1.GET("/interfaces", interfacesHandler.GetInterfaces)
+	apiV1.GET("/interfaces/:id", interfacesHandler.GetInterface)
+	apiV1.POST("/interfaces", interfacesHandler.Add)
+	apiV1.DELETE("/interfaces/:id", interfacesHandler.Delete)
 
 	// Networks
-	apiV1.GET("/networks", v1_networks.GetNetworks)
-	apiV1.GET("/networks/:id", v1_networks.GetNetwork)
-	apiV1.POST("/networks", v1_networks.AddNetwork)
-	apiV1.DELETE("/networks/:id", v1_networks.DeleteNetwork)
+	apiV1.GET("/networks", networksHandler.GetNetworks)
+	apiV1.GET("/networks/:id", networksHandler.GetNetwork)
+	apiV1.POST("/networks", networksHandler.Add)
+	apiV1.DELETE("/networks/:id", networksHandler.Delete)
 
 	return r
 }

@@ -2,8 +2,7 @@ package interfaces
 
 import (
 	devices "atranna-api/src/internal/handlers/v1/devices"
-	"atranna-api/src/internal/models"
-	"atranna-api/src/internal/store"
+	"atranna-api/src/internal/repository/memory"
 	"bytes"
 	"encoding/json"
 	"net/http"
@@ -14,16 +13,18 @@ import (
 )
 
 func TestInterfaces(t *testing.T) {
-	store.Devices = []models.Device{}
-	store.Interfaces = []models.Interface{}
+	deviceRepo := memory.NewDeviceRepository()
+	interfaceRepo := memory.NewInterfaceRepository(deviceRepo)
+	deviceHandler := devices.NewHandler(deviceRepo, interfaceRepo)
+	handler := NewHandler(interfaceRepo)
 
 	router := gin.Default()
-	router.POST("/devices", devices.AddDevice)
+	router.POST("/devices", deviceHandler.Add)
 
-	router.POST("/interfaces/", AddInterface)
-	router.GET("/interfaces", GetInterfaces)
-	router.GET("/interfaces/:id", GetInterface)
-	router.DELETE("/interfaces/:id", DeleteInterface)
+	router.POST("/interfaces/", handler.Add)
+	router.GET("/interfaces", handler.GetInterfaces)
+	router.GET("/interfaces/:id", handler.GetInterface)
+	router.DELETE("/interfaces/:id", handler.Delete)
 
 	// Add a device
 	body := map[string]any{
@@ -94,11 +95,11 @@ func TestInterfaces(t *testing.T) {
 }
 
 func TestAddInterfaceRequiresDeviceID(t *testing.T) {
-	store.Devices = []models.Device{}
-	store.Interfaces = []models.Interface{}
+	deviceRepo := memory.NewDeviceRepository()
+	handler := NewHandler(memory.NewInterfaceRepository(deviceRepo))
 
 	router := gin.Default()
-	router.POST("/interfaces/", AddInterface)
+	router.POST("/interfaces/", handler.Add)
 
 	body := map[string]any{
 		"name": "eth0",

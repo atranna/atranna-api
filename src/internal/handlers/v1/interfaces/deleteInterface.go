@@ -1,21 +1,20 @@
 package interfaces
 
 import (
-	"atranna-api/src/internal/store"
 	"net/http"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
 
-func DeleteInterface(c *gin.Context) {
+func (h *Handler) Delete(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid id"})
 		return
 	}
 
-	_, deleted := store.DeleteInterface(id)
+	_, deleted := h.interfaces.Delete(id)
 	if !deleted {
 		c.JSON(http.StatusNotFound, gin.H{"error": "interface not found"})
 		return

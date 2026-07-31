@@ -1,0 +1,44 @@
+package memory
+
+import (
+	"atranna-api/src/internal/models"
+)
+
+type DeviceRepository struct {
+	devices []models.Device
+	nextID  int
+}
+
+func NewDeviceRepository() *DeviceRepository {
+	return &DeviceRepository{}
+}
+
+func (r *DeviceRepository) Add(device models.Device) models.Device {
+	r.nextID++
+	device.ID = r.nextID
+	r.devices = append(r.devices, device)
+	return device
+}
+
+func (r *DeviceRepository) GetByID(id int) (models.Device, bool) {
+	for _, device := range r.devices {
+		if device.ID == id {
+			return device, true
+		}
+	}
+	return models.Device{}, false
+}
+
+func (r *DeviceRepository) GetAll() []models.Device {
+	return r.devices
+}
+
+func (r *DeviceRepository) Delete(id int) (models.Device, bool) {
+	for i, device := range r.devices {
+		if device.ID == id {
+			r.devices = append(r.devices[:i], r.devices[i+1:]...)
+			return device, true
+		}
+	}
+	return models.Device{}, false
+}
