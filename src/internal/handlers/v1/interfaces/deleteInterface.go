@@ -1,4 +1,4 @@
-package v1
+package interfaces
 
 import (
 	"atranna-api/src/internal/store"
