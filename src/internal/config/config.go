@@ -57,9 +57,17 @@ func Load() {
 }
 
 func Validate() error {
-	// Validate the master token is set when auth is not disabled
-	if Current.MasterToken == "" && !Current.DisableAuth {
-		return fmt.Errorf("master token must be set.")
+
+	if !Current.DisableAuth { // If auth is not disabled, validate the master token
+		// Validate the master token is set when auth is not disabled
+		if Current.MasterToken == "" {
+			return fmt.Errorf("master token must be set.")
+		}
+
+		// Validate the master token is at least 32 characters long
+		if len(Current.MasterToken) < 32 {
+			return fmt.Errorf("master token must be at least 32 characters long.")
+		}
 	}
 
 	// Validate the port is a valid number
