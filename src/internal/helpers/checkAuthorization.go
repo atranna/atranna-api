@@ -1,17 +1,17 @@
 package helpers
 
 import (
+	"atranna-api/src/internal/config"
 	"crypto/subtle"
-	"os"
 	"strings"
 )
 
-func CheckAuthorization(authorizationHeader string) bool {
-	if os.Getenv("DEV_DISABLE_AUTH") == "true" {
+func CheckAuthorization(authorizationHeader string, config config.Config) bool {
+	if !config.Auth.Enable {
 		return true
 	}
 
-	masterToken := strings.TrimSpace(os.Getenv("MASTER_TOKEN"))
+	masterToken := strings.TrimSpace(config.Auth.MasterToken)
 	if masterToken == "" {
 		return false
 	}

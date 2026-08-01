@@ -1,6 +1,7 @@
 package middlewares
 
 import (
+	"atranna-api/src/internal/config"
 	"atranna-api/src/internal/helpers"
 	"net/http"
 
@@ -9,7 +10,7 @@ import (
 
 func AuthMiddleware() gin.HandlerFunc {
     return func(c *gin.Context) {
-        if !helpers.CheckAuthorization(c.GetHeader("Authorization")) {
+        if !helpers.CheckAuthorization(c.GetHeader("Authorization"), config.Current) {
             c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
             return
         }
