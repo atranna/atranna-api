@@ -1,23 +1,22 @@
 package router
 
 import (
+	"atranna-api/src/internal/config"
 	"atranna-api/src/internal/handlers"
 	v1_devices "atranna-api/src/internal/handlers/v1/devices"
 	v1_interfaces "atranna-api/src/internal/handlers/v1/interfaces"
 	v1_networks "atranna-api/src/internal/handlers/v1/networks"
 	"atranna-api/src/internal/middlewares"
 	"atranna-api/src/internal/repository/memory"
-	"os"
 
 	"github.com/gin-gonic/gin"
 )
 
 func New() *gin.Engine {
-	if os.Getenv("DEBUG") == "true" {
-		gin.SetMode(gin.DebugMode)
-	} else {
+	if !config.Current.Debug {
 		gin.SetMode(gin.ReleaseMode)
-	}
+	} 
+	
 	r := gin.Default()
 
 	r.GET("/ping", handlers.Ping)
