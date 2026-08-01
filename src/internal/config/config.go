@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"os"
 	"strconv"
 )
@@ -53,4 +54,17 @@ func Load() {
 	Current.DisableAuth = getEnvAsBool("DEV_DISABLE_AUTH", defaultConfig.DisableAuth)
 	Current.MasterToken = getEnv("MASTER_TOKEN", defaultConfig.MasterToken)
 	Current.Port = getEnv("PORT", defaultConfig.Port)
+}
+
+func Validate() error {
+	// Validate the master token is set when auth is not disabled
+	if Current.MasterToken == "" && !Current.DisableAuth {
+		return fmt.Errorf("master token must be set.")
+	}
+
+	// Validate the port is a valid number
+	if _, err := strconv.Atoi(Current.Port); err != nil {
+		return fmt.Errorf("invalid port number: %s", Current.Port)
+	}
+	return nil
 }
