@@ -11,6 +11,13 @@ type Config struct {
 	}
 	Storage struct {
 		Backend string
+		Postgres struct {
+			Host     string
+			Port     string
+			User     string
+			Password string
+			DBName   string
+		}
 	}
 }
 

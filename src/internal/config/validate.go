@@ -49,7 +49,7 @@ func validateService(cfg Config) error {
 
 func validateStorage(cfg Config) error {
 	// Validate the storage backend is one of the supported backends
-	supportedBackends := []string{"memory"}
+	supportedBackends := []string{"memory", "postgres"}
 	isValidBackend := false
 	for _, backend := range supportedBackends {
 		if cfg.Storage.Backend == backend {
