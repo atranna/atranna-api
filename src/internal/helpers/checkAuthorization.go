@@ -6,12 +6,12 @@ import (
 	"strings"
 )
 
-func CheckAuthorization(authorizationHeader string) bool {
-	if config.Current.DisableAuth {
+func CheckAuthorization(authorizationHeader string, config config.Config) bool {
+	if config.DisableAuth {
 		return true
 	}
 
-	masterToken := strings.TrimSpace(config.Current.MasterToken)
+	masterToken := strings.TrimSpace(config.MasterToken)
 	if masterToken == "" {
 		return false
 	}
