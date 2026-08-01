@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"os"
 	"strconv"
 )
@@ -41,38 +40,3 @@ var defaultConfig = Config{
 }
 
 var Current Config = defaultConfig
-
-func Load() {
-	// Initialize the configuration with default values
-	Current = defaultConfig
-
-	// Load configuration from YAML here
-
-	// Override configuration with environment variables
-
-	Current.Debug = getEnvAsBool("DEBUG", defaultConfig.Debug)
-	Current.DisableAuth = getEnvAsBool("DEV_DISABLE_AUTH", defaultConfig.DisableAuth)
-	Current.MasterToken = getEnv("MASTER_TOKEN", defaultConfig.MasterToken)
-	Current.Port = getEnv("PORT", defaultConfig.Port)
-}
-
-func Validate() error {
-
-	if !Current.DisableAuth { // If auth is not disabled, validate the master token
-		// Validate the master token is set when auth is not disabled
-		if Current.MasterToken == "" {
-			return fmt.Errorf("master token must be set.")
-		}
-
-		// Validate the master token is at least 32 characters long
-		if len(Current.MasterToken) < 32 {
-			return fmt.Errorf("master token must be at least 32 characters long.")
-		}
-	}
-
-	// Validate the port is a valid number
-	if _, err := strconv.Atoi(Current.Port); err != nil {
-		return fmt.Errorf("invalid port number: %s", Current.Port)
-	}
-	return nil
-}
