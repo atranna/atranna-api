@@ -21,9 +21,15 @@ func New() *gin.Engine {
 
 	r.GET("/ping", handlers.Ping)
 
-	deviceRepo := memory.NewDeviceRepository()
-	interfaceRepo := memory.NewInterfaceRepository(deviceRepo)
-	networkRepo := memory.NewNetworkRepository()
+	var deviceRepo *memory.DeviceRepository
+	var interfaceRepo *memory.InterfaceRepository
+	var networkRepo *memory.NetworkRepository
+	
+	if config.Current.Storage.Backend == "memory" {
+		deviceRepo = memory.NewDeviceRepository()
+		interfaceRepo = memory.NewInterfaceRepository(deviceRepo)
+		networkRepo = memory.NewNetworkRepository()
+	}
 
 	devicesHandler := v1_devices.NewHandler(deviceRepo, interfaceRepo)
 	interfacesHandler := v1_interfaces.NewHandler(interfaceRepo)

@@ -9,6 +9,9 @@ type Config struct {
 		Enable bool
 		MasterToken string
 	}
+	Storage struct {
+		Backend string
+	}
 }
 
 var Current Config = defaultConfig

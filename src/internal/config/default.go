@@ -14,4 +14,9 @@ var defaultConfig = Config{
 		Enable:      true,
 		MasterToken: "",
 	},
+	Storage: struct {
+		Backend string
+	}{
+		Backend: "memory",
+	},
 }
