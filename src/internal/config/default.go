@@ -16,7 +16,27 @@ var defaultConfig = Config{
 	},
 	Storage: struct {
 		Backend string
+		Postgres struct {
+			Host     string
+			Port     string
+			User     string
+			Password string
+			DBName   string
+		}
 	}{
 		Backend: "memory",
+		Postgres: struct {
+			Host     string
+			Port     string
+			User     string
+			Password string
+			DBName   string
+		}{
+			Host:     "",
+			Port:     "5432",
+			User:     "atranna",
+			Password: "",
+			DBName:   "atranna-api",
+		},
 	},
 }
