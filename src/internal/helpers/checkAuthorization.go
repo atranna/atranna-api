@@ -7,11 +7,11 @@ import (
 )
 
 func CheckAuthorization(authorizationHeader string, config config.Config) bool {
-	if config.DisableAuth {
+	if !config.Auth.Enable {
 		return true
 	}
 
-	masterToken := strings.TrimSpace(config.MasterToken)
+	masterToken := strings.TrimSpace(config.Auth.MasterToken)
 	if masterToken == "" {
 		return false
 	}

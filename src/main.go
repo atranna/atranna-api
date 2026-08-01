@@ -14,5 +14,5 @@ func main() {
 	}
 	
 	router := router.New()
-	router.Run("0.0.0.0:" + config.Current.Port)
+	router.Run("0.0.0.0:" + config.Current.Service.Port)
 }

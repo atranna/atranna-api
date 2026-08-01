@@ -7,7 +7,13 @@ import (
 
 func TestAuthorizationPass(t *testing.T) {
 	config := config.Config{
-		MasterToken: "testtoken",
+		Auth: struct {
+			Enable      bool
+			MasterToken string
+		}{
+			Enable:      true,
+			MasterToken: "testtoken",
+		},
 	}
 
 	if !CheckAuthorization("testtoken", config) {
@@ -17,7 +23,13 @@ func TestAuthorizationPass(t *testing.T) {
 
 func TestAuthorizationFail(t *testing.T) {
 	config := config.Config{
-		MasterToken: "testtoken",
+		Auth: struct {
+			Enable      bool
+			MasterToken string
+		}{
+			Enable:      true,
+			MasterToken: "testtoken",
+		},
 	}
 
 	if CheckAuthorization("wrongtoken", config) {
@@ -27,7 +39,12 @@ func TestAuthorizationFail(t *testing.T) {
 
 func TestAuthorizationDisabled(t *testing.T) {
 	config := config.Config{
-		DisableAuth: true,
+		Auth: struct {
+			Enable      bool
+			MasterToken string
+		}{
+			Enable: false,
+		},
 	}
 
 	if !CheckAuthorization("token", config) {
@@ -37,7 +54,13 @@ func TestAuthorizationDisabled(t *testing.T) {
 
 func TestAuthorizationEmptyToken(t *testing.T) {
 	config := config.Config{
-		MasterToken: "",
+		Auth: struct {
+			Enable      bool
+			MasterToken string
+		}{
+			Enable:      true,
+			MasterToken: "",
+		},
 	}
 
 	if CheckAuthorization("token", config) {

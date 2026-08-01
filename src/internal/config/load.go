@@ -9,7 +9,7 @@ func Load() {
 	// Override configuration with environment variables
 
 	Current.Debug = getEnvAsBool("DEBUG", defaultConfig.Debug)
-	Current.DisableAuth = getEnvAsBool("DEV_DISABLE_AUTH", defaultConfig.DisableAuth)
-	Current.MasterToken = getEnv("MASTER_TOKEN", defaultConfig.MasterToken)
-	Current.Port = getEnv("PORT", defaultConfig.Port)
+	Current.Auth.Enable = getEnvAsBool("AUTH_ENABLE", defaultConfig.Auth.Enable)
+	Current.Auth.MasterToken = getEnv("MASTER_TOKEN", defaultConfig.Auth.MasterToken)
+	Current.Service.Port = getEnv("PORT", defaultConfig.Service.Port)
 }

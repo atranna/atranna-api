@@ -2,7 +2,16 @@ package config
 
 var defaultConfig = Config{
 	Debug:       false,
-	DisableAuth: false,
-	MasterToken: "",
-	Port:		"8080",
+	Service: struct {
+		Port string
+	}{
+		Port: "8080",
+	},
+	Auth: struct {
+		Enable      bool
+		MasterToken string
+	}{
+		Enable:      true,
+		MasterToken: "",
+	},
 }

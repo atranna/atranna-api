@@ -2,9 +2,13 @@ package config
 
 type Config struct {
 	Debug       bool
-	DisableAuth bool
-	MasterToken string
-	Port		string
+	Service struct {
+		Port string
+	}
+	Auth struct {
+		Enable bool
+		MasterToken string
+	}
 }
 
 var Current Config = defaultConfig
