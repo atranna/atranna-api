@@ -49,7 +49,7 @@ func validateService(cfg Config) error {
 
 func validateStorage(cfg Config) error {
 	// Validate the storage backend is one of the supported backends
-	supportedBackends := []string{"memory"}
+	supportedBackends := []string{"memory", "postgres"}
 	isValidBackend := false
 	for _, backend := range supportedBackends {
 		if cfg.Storage.Backend == backend {
@@ -59,6 +59,25 @@ func validateStorage(cfg Config) error {
 	}
 	if !isValidBackend {
 		return fmt.Errorf("unsupported storage backend: %s", cfg.Storage.Backend)
+	}
+	
+	if cfg.Storage.Backend == "postgres" {
+		// Validate that all required Postgres fields are set
+		if cfg.Storage.Postgres.Host == "" {
+			return fmt.Errorf("Postgres host must be set.")
+		}
+		if cfg.Storage.Postgres.Port == "" {
+			return fmt.Errorf("Postgres port must be set.")
+		}
+		if cfg.Storage.Postgres.User == "" {
+			return fmt.Errorf("Postgres user must be set.")
+		}
+		if cfg.Storage.Postgres.Password == "" {
+			return fmt.Errorf("Postgres password must be set.")
+		}
+		if cfg.Storage.Postgres.DBName == "" {
+			return fmt.Errorf("Postgres database name must be set.")
+		}
 	}
 	return nil
 }
