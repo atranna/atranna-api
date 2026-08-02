@@ -18,4 +18,5 @@ func Load() {
 	Current.Storage.Postgres.User = getEnv("STORAGE_POSTGRES_USER", defaultConfig.Storage.Postgres.User)
 	Current.Storage.Postgres.Password = getEnv("STORAGE_POSTGRES_PASSWORD", defaultConfig.Storage.Postgres.Password)
 	Current.Storage.Postgres.DBName = getEnv("STORAGE_POSTGRES_DBNAME", defaultConfig.Storage.Postgres.DBName)
+	Current.Storage.SQLite.FilePath = getEnv("STORAGE_SQLITE_FILEPATH", defaultConfig.Storage.SQLite.FilePath)
 }

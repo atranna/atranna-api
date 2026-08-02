@@ -27,7 +27,7 @@ var defaultConfig = Config{
 			FilePath string
 		}
 	}{
-		Backend: "memory",
+		Backend: "sqlite",
 		Postgres: struct {
 			Host     string
 			Port     string
