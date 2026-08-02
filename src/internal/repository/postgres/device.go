@@ -14,15 +14,15 @@ func NewDeviceRepository(db *sql.DB) *DeviceRepository {
 	return &DeviceRepository{db: db}
 }
 
-func (r *DeviceRepository) Add(device models.Device) models.Device {
+func (r *DeviceRepository) Add(device models.Device) (models.Device, error) {
 	err := r.db.QueryRow(
 		`INSERT INTO devices (hostname, ip, vendor, model, type) VALUES ($1, $2, $3, $4, $5) RETURNING id`,
 		device.Hostname, device.IP, device.Vendor, device.Model, device.Type,
 	).Scan(&device.ID)
 	if err != nil {
-		return models.Device{}
+		return models.Device{}, err
 	}
-	return device
+	return device, nil
 }
 
 func (r *DeviceRepository) GetByID(id int) (models.Device, bool) {

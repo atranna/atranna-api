@@ -14,6 +14,10 @@ func (h *Handler) Add(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	addedDevice := h.devices.Add(newDevice)
+	addedDevice, err := h.devices.Add(newDevice)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
 	c.JSON(http.StatusCreated, addedDevice)
 }

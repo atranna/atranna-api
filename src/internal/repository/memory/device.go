@@ -13,11 +13,11 @@ func NewDeviceRepository() *DeviceRepository {
 	return &DeviceRepository{}
 }
 
-func (r *DeviceRepository) Add(device models.Device) models.Device {
+func (r *DeviceRepository) Add(device models.Device) (models.Device, error) {
 	r.nextID++
 	device.ID = r.nextID
 	r.devices = append(r.devices, device)
-	return device
+	return device, nil
 }
 
 func (r *DeviceRepository) GetByID(id int) (models.Device, bool) {

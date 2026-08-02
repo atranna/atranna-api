@@ -14,17 +14,17 @@ func NewDeviceRepository(db *sql.DB) *DeviceRepository {
 	return &DeviceRepository{db: db}
 }
 
-func (r *DeviceRepository) Add(device models.Device) models.Device {
+func (r *DeviceRepository) Add(device models.Device) (models.Device, error) {
 	res, err := r.db.Exec(
 		`INSERT INTO devices (hostname, ip, vendor, model, type) VALUES (?, ?, ?, ?, ?)`,
 		device.Hostname, device.IP, device.Vendor, device.Model, device.Type,
 	)
 	if err != nil {
-		return models.Device{}
+		return models.Device{}, err
 	}
 	id, _ := res.LastInsertId()
 	device.ID = int(id)
-	return device
+	return device, nil
 }
 
 func (r *DeviceRepository) GetByID(id int) (models.Device, bool) {
