@@ -13,11 +13,11 @@ func NewNetworkRepository() *NetworkRepository {
 	return &NetworkRepository{}
 }
 
-func (r *NetworkRepository) Add(network models.Network) models.Network {
+func (r *NetworkRepository) Add(network models.Network) (models.Network, error) {
 	r.nextID++
 	network.ID = r.nextID
 	r.networks = append(r.networks, network)
-	return network
+	return network, nil
 }
 
 func (r *NetworkRepository) GetByID(id int) (models.Network, bool) {

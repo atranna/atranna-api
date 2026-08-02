@@ -14,6 +14,10 @@ func (h *Handler) Add(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	addedNetwork := h.networks.Add(newNetwork)
+	addedNetwork, err := h.networks.Add(newNetwork)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
 	c.JSON(http.StatusCreated, addedNetwork)
 }

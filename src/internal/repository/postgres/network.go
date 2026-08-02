@@ -14,15 +14,15 @@ func NewNetworkRepository(db *sql.DB) *NetworkRepository {
 	return &NetworkRepository{db: db}
 }
 
-func (r *NetworkRepository) Add(network models.Network) models.Network {
+func (r *NetworkRepository) Add(network models.Network) (models.Network, error) {
 	err := r.db.QueryRow(
 		`INSERT INTO networks (name, cidr, gateway, vlan) VALUES ($1, $2, $3, $4) RETURNING id`,
 		network.Name, network.CIDR, network.Gateway, network.Vlan,
 	).Scan(&network.ID)
 	if err != nil {
-		return models.Network{}
+		return models.Network{}, err
 	}
-	return network
+	return network, nil
 }
 
 func (r *NetworkRepository) GetByID(id int) (models.Network, bool) {

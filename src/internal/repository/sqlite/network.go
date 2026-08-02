@@ -14,17 +14,17 @@ func NewNetworkRepository(db *sql.DB) *NetworkRepository {
 	return &NetworkRepository{db: db}
 }
 
-func (r *NetworkRepository) Add(network models.Network) models.Network {
+func (r *NetworkRepository) Add(network models.Network) (models.Network, error) {
 	res, err := r.db.Exec(
 		`INSERT INTO networks (name, cidr, gateway, vlan) VALUES (?, ?, ?, ?)`,
 		network.Name, network.CIDR, network.Gateway, network.Vlan,
 	)
 	if err != nil {
-		return models.Network{}
+		return models.Network{}, err
 	}
 	id, _ := res.LastInsertId()
 	network.ID = int(id)
-	return network
+	return network, nil
 }
 
 func (r *NetworkRepository) GetByID(id int) (models.Network, bool) {

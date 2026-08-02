@@ -21,7 +21,7 @@ type InterfaceRepository interface {
 }
 
 type NetworkRepository interface {
-	Add(network models.Network) models.Network
+	Add(network models.Network) (models.Network, error)
 	GetByID(id int) (models.Network, bool)
 	GetAll() []models.Network
 	Delete(id int) (models.Network, bool)
