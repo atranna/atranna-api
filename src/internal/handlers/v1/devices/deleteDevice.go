@@ -20,7 +20,10 @@ func (h *Handler) Delete(c *gin.Context) {
 		return
 	}
 
-	h.interfaces.DeleteByDeviceID(id)
+	if err := h.interfaces.DeleteByDeviceID(id); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
 
 	c.Status(http.StatusNoContent)
 }

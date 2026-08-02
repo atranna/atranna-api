@@ -3,5 +3,5 @@ CREATE TABLE networks (
     name TEXT NOT NULL,
     cidr TEXT NOT NULL,
     gateway TEXT NOT NULL,
-    vlan TEXT NOT NULL
+    vlan INT
 );

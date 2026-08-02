@@ -8,7 +8,9 @@ import (
 	v1_interfaces "atranna-api/src/internal/handlers/v1/interfaces"
 	v1_networks "atranna-api/src/internal/handlers/v1/networks"
 	"atranna-api/src/internal/middlewares"
+	"atranna-api/src/internal/repository"
 	"atranna-api/src/internal/repository/memory"
+	"atranna-api/src/internal/repository/sqlite"
 
 	"github.com/gin-gonic/gin"
 )
@@ -22,9 +24,9 @@ func New() *gin.Engine {
 
 	r.GET("/ping", handlers.Ping)
 
-	var deviceRepo *memory.DeviceRepository
-	var interfaceRepo *memory.InterfaceRepository
-	var networkRepo *memory.NetworkRepository
+	var deviceRepo repository.DeviceRepository
+	var interfaceRepo repository.InterfaceRepository
+	var networkRepo repository.NetworkRepository
 	
 	switch config.Current.Storage.Backend {
 	case "memory":
@@ -42,9 +44,9 @@ func New() *gin.Engine {
 		database.Init()
 		database.ApplySQLiteMigrations()
 
-		// deviceRepo = sqlite.NewDeviceRepository()
-		// interfaceRepo = sqlite.NewInterfaceRepository(deviceRepo)
-		// networkRepo = sqlite.NewNetworkRepository()
+		deviceRepo = sqlite.NewDeviceRepository(database.DB)
+		interfaceRepo = sqlite.NewInterfaceRepository(database.DB, deviceRepo)
+		networkRepo = sqlite.NewNetworkRepository(database.DB)
 	}
 
 	devicesHandler := v1_devices.NewHandler(deviceRepo, interfaceRepo)
