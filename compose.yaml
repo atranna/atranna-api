@@ -8,3 +8,11 @@ services:
       - 8080:8080
     env_file:
       - .env
+    depends_on:
+      - db
+  db:
+    image: postgres:18
+    environment:
+      POSTGRES_USER: ${STORAGE_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${STORAGE_POSTGRES_PASSWORD}
+      POSTGRES_DB: ${STORAGE_POSTGRES_DB}

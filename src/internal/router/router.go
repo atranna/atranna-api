@@ -2,6 +2,7 @@ package router
 
 import (
 	"atranna-api/src/internal/config"
+	"atranna-api/src/internal/database"
 	"atranna-api/src/internal/handlers"
 	v1_devices "atranna-api/src/internal/handlers/v1/devices"
 	v1_interfaces "atranna-api/src/internal/handlers/v1/interfaces"
@@ -29,6 +30,14 @@ func New() *gin.Engine {
 		deviceRepo = memory.NewDeviceRepository()
 		interfaceRepo = memory.NewInterfaceRepository(deviceRepo)
 		networkRepo = memory.NewNetworkRepository()
+	} 
+	
+	if config.Current.Storage.Backend == "postgres" {
+		database.InitPostgres()
+
+		// deviceRepo = postgres.NewDeviceRepository()
+		// interfaceRepo = postgres.NewInterfaceRepository(deviceRepo)
+		// networkRepo = postgres.NewNetworkRepository()
 	}
 
 	devicesHandler := v1_devices.NewHandler(deviceRepo, interfaceRepo)
