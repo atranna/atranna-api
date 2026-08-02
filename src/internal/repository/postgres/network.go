@@ -15,30 +15,30 @@ func NewNetworkRepository(db *sql.DB) *NetworkRepository {
 }
 
 func (r *NetworkRepository) Add(network models.Network) models.Network {
-	res, err := r.db.Exec(
-		`INSERT INTO networks (name, cidr, gateway) VALUES (?, ?, ?)`,
-		network.Name, network.CIDR, network.Gateway,
-	)
+	err := r.db.QueryRow(
+		`INSERT INTO networks (name, cidr, gateway, vlan) VALUES ($1, $2, $3, $4) RETURNING id`,
+		network.Name, network.CIDR, network.Gateway, network.Vlan,
+	).Scan(&network.ID)
 	if err != nil {
 		return models.Network{}
 	}
-	id, _ := res.LastInsertId()
-	network.ID = int(id)
 	return network
 }
 
 func (r *NetworkRepository) GetByID(id int) (models.Network, bool) {
-	row := r.db.QueryRow(`SELECT id, name, cidr, gateway FROM networks WHERE id = ?`, id)
+	row := r.db.QueryRow(`SELECT id, name, cidr, gateway, vlan FROM networks WHERE id = $1`, id)
 	var network models.Network
-	err := row.Scan(&network.ID, &network.Name, &network.CIDR, &network.Gateway)
+	var vlan sql.NullInt64
+	err := row.Scan(&network.ID, &network.Name, &network.CIDR, &network.Gateway, &vlan)
 	if err != nil {
 		return models.Network{}, false
 	}
+	network.Vlan = int(vlan.Int64)
 	return network, true
 }
 
 func (r *NetworkRepository) GetAll() []models.Network {
-	rows, err := r.db.Query(`SELECT id, name, cidr, gateway FROM networks`)
+	rows, err := r.db.Query(`SELECT id, name, cidr, gateway, vlan FROM networks`)
 	if err != nil {
 		return []models.Network{}
 	}
@@ -47,10 +47,12 @@ func (r *NetworkRepository) GetAll() []models.Network {
 	var networks []models.Network
 	for rows.Next() {
 		var network models.Network
-		err := rows.Scan(&network.ID, &network.Name, &network.CIDR, &network.Gateway)
+		var vlan sql.NullInt64
+		err := rows.Scan(&network.ID, &network.Name, &network.CIDR, &network.Gateway, &vlan)
 		if err != nil {
 			continue
 		}
+		network.Vlan = int(vlan.Int64)
 		networks = append(networks, network)
 	}
 	if err := rows.Err(); err != nil {
@@ -60,7 +62,7 @@ func (r *NetworkRepository) GetAll() []models.Network {
 }
 
 func (r *NetworkRepository) Delete(id int) (models.Network, bool) {
-	res, err := r.db.Exec(`DELETE FROM networks WHERE id = ?`, id)
+	res, err := r.db.Exec(`DELETE FROM networks WHERE id = $1`, id)
 	if err != nil {
 		return models.Network{}, false
 	}

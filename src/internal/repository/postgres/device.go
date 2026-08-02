@@ -15,20 +15,18 @@ func NewDeviceRepository(db *sql.DB) *DeviceRepository {
 }
 
 func (r *DeviceRepository) Add(device models.Device) models.Device {
-	res, err := r.db.Exec(
-		`INSERT INTO devices (hostname, ip, vendor, model, type) VALUES (?, ?, ?, ?, ?)`,
+	err := r.db.QueryRow(
+		`INSERT INTO devices (hostname, ip, vendor, model, type) VALUES ($1, $2, $3, $4, $5) RETURNING id`,
 		device.Hostname, device.IP, device.Vendor, device.Model, device.Type,
-	)
+	).Scan(&device.ID)
 	if err != nil {
 		return models.Device{}
 	}
-	id, _ := res.LastInsertId()
-	device.ID = int(id)
 	return device
 }
 
 func (r *DeviceRepository) GetByID(id int) (models.Device, bool) {
-	row := r.db.QueryRow(`SELECT id, hostname, ip, vendor, model, type FROM devices WHERE id = ?`, id)
+	row := r.db.QueryRow(`SELECT id, hostname, ip, vendor, model, type FROM devices WHERE id = $1`, id)
 	var device models.Device
 	err := row.Scan(&device.ID, &device.Hostname, &device.IP, &device.Vendor, &device.Model, &device.Type)
 	if err != nil {
@@ -64,7 +62,7 @@ func (r *DeviceRepository) Delete(id int) (models.Device, bool) {
 	if !found {
 		return models.Device{}, false
 	}
-	_, err := r.db.Exec(`DELETE FROM devices WHERE id = ?`, id)
+	_, err := r.db.Exec(`DELETE FROM devices WHERE id = $1`, id)
 	if err != nil {
 		return models.Device{}, false
 	}
