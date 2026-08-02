@@ -5,5 +5,5 @@ CREATE TABLE interfaces (
     mac_address VARCHAR(100) NOT NULL,
     name VARCHAR(100) NOT NULL,
     state VARCHAR(100) NOT NULL,
-    speed integer NOT NULL
+    speed INTEGER NOT NULL
 );

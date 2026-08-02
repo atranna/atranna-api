@@ -18,6 +18,9 @@ type Config struct {
 			Password string
 			DBName   string
 		}
+		SQLite struct {
+			FilePath string
+		}
 	}
 }
 

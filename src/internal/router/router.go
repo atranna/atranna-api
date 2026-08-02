@@ -26,19 +26,25 @@ func New() *gin.Engine {
 	var interfaceRepo *memory.InterfaceRepository
 	var networkRepo *memory.NetworkRepository
 	
-	if config.Current.Storage.Backend == "memory" {
+	switch config.Current.Storage.Backend {
+	case "memory":
 		deviceRepo = memory.NewDeviceRepository()
 		interfaceRepo = memory.NewInterfaceRepository(deviceRepo)
 		networkRepo = memory.NewNetworkRepository()
-	} 
-	
-	if config.Current.Storage.Backend == "postgres" {
-		database.InitPostgres()
-		database.ApplyMigrations()
+	case "postgres":
+		database.Init()
+		database.ApplyPostgresMigrations()
 
 		// deviceRepo = postgres.NewDeviceRepository()
 		// interfaceRepo = postgres.NewInterfaceRepository(deviceRepo)
 		// networkRepo = postgres.NewNetworkRepository()
+	case "sqlite":
+		database.Init()
+		database.ApplySQLiteMigrations()
+
+		// deviceRepo = sqlite.NewDeviceRepository()
+		// interfaceRepo = sqlite.NewInterfaceRepository(deviceRepo)
+		// networkRepo = sqlite.NewNetworkRepository()
 	}
 
 	devicesHandler := v1_devices.NewHandler(deviceRepo, interfaceRepo)
