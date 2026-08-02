@@ -3,7 +3,12 @@ package database
 import (
 	"atranna-api/src/internal/config"
 	"database/sql"
+	"errors"
 	"fmt"
+
+	"github.com/golang-migrate/migrate/v4"
+	"github.com/golang-migrate/migrate/v4/database/postgres"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
 
 	_ "github.com/lib/pq"
 )
@@ -42,4 +47,20 @@ func GetPostgresVersion() (string, error) {
 		return "", err
 	}
 	return version, nil
+}
+
+func ApplyMigrations() {
+	driver, err := postgres.WithInstance(DB, &postgres.Config{})
+	if err != nil {
+		panic(err)
+	}	
+	m, err := migrate.NewWithDatabaseInstance(
+        "file://etc/atranna-api/migrations",
+        "postgres", driver)
+	if err != nil {
+		panic(err)
+	}
+	if err := m.Up(); err != nil && !errors.Is(err, migrate.ErrNoChange) {
+		panic(err)
+	}
 }

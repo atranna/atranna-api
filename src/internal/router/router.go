@@ -34,6 +34,7 @@ func New() *gin.Engine {
 	
 	if config.Current.Storage.Backend == "postgres" {
 		database.InitPostgres()
+		database.ApplyMigrations()
 
 		// deviceRepo = postgres.NewDeviceRepository()
 		// interfaceRepo = postgres.NewInterfaceRepository(deviceRepo)

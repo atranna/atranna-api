@@ -1,0 +1,8 @@
+CREATE TABLE devices (
+    id SERIAL PRIMARY KEY,
+    hostname VARCHAR(255) NOT NULL,
+    ip VARCHAR(45) NOT NULL,
+    vendor VARCHAR(100) NOT NULL,
+    model VARCHAR(100) NOT NULL,
+    type VARCHAR(100) NOT NULL
+);
