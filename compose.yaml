@@ -1,6 +1,7 @@
 ---
 services:
   atranna-api:
+    image: ghcr.io/atranna/atranna-api:${TAG:-latest}
     build:
       context: .
       target: final
