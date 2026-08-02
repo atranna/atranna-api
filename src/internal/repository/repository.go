@@ -17,7 +17,7 @@ type InterfaceRepository interface {
 	GetAll() []models.Interface
 	GetByDeviceID(deviceID int) []models.Interface
 	Delete(id int) (models.Interface, bool)
-	DeleteByDeviceID(deviceID int)
+	DeleteByDeviceID(deviceID int) error
 }
 
 type NetworkRepository interface {
