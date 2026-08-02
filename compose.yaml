@@ -19,8 +19,14 @@ services:
       POSTGRES_USER: ${STORAGE_POSTGRES_USER}
       POSTGRES_PASSWORD: ${STORAGE_POSTGRES_PASSWORD}
       POSTGRES_DB: ${STORAGE_POSTGRES_DB}
+    volumes:
+      - ./db:/var/lib/postgresql/18/docker
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${STORAGE_POSTGRES_USER} -d ${STORAGE_POSTGRES_DB}"]
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${STORAGE_POSTGRES_USER} -d ${STORAGE_POSTGRES_DB}",
+        ]
       interval: 5s
       timeout: 5s
       retries: 10
