@@ -23,6 +23,9 @@ var defaultConfig = Config{
 			Password string
 			DBName   string
 		}
+		SQLite struct {
+			FilePath string
+		}
 	}{
 		Backend: "memory",
 		Postgres: struct {
@@ -37,6 +40,11 @@ var defaultConfig = Config{
 			User:     "atranna",
 			Password: "",
 			DBName:   "atranna-api",
+		},
+		SQLite: struct {
+			FilePath string
+		}{
+			FilePath: "/etc/atranna-api/data/atranna-api.db",
 		},
 	},
 }

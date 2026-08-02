@@ -6,6 +6,8 @@ services:
       target: final
     ports:
       - 8080:8080
+    volumes:
+      - ./data:/etc/atranna-api/data
     env_file:
       - .env
     depends_on:

@@ -49,7 +49,7 @@ func validateService(cfg Config) error {
 
 func validateStorage(cfg Config) error {
 	// Validate the storage backend is one of the supported backends
-	supportedBackends := []string{"memory", "postgres"}
+	supportedBackends := []string{"memory", "postgres", "sqlite"}
 	isValidBackend := false
 	for _, backend := range supportedBackends {
 		if cfg.Storage.Backend == backend {
@@ -79,5 +79,13 @@ func validateStorage(cfg Config) error {
 			return fmt.Errorf("Postgres database name must be set.")
 		}
 	}
+
+	if cfg.Storage.Backend == "sqlite" {
+		// Validate that the SQLite file path is set
+		if cfg.Storage.SQLite.FilePath == "" {
+			return fmt.Errorf("SQLite file path must be set.")
+		}
+	}
+
 	return nil
 }
