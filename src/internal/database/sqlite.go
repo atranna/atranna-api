@@ -9,7 +9,7 @@ import (
 )
 
 func ConnectSQLite() (*sql.DB, error) {
-	dsn := config.Current.Storage.SQLite.FilePath + "?_foreign_keys=1"
+	dsn := config.Current.Storage.SQLite.FilePath + "?_pragma=foreign_keys(1)"
 
 	db, err := sql.Open("sqlite", dsn)
 	if err != nil {
