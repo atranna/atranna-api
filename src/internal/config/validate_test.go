@@ -3,15 +3,10 @@ package config
 import "testing"
 
 func TestAuthValidationBlankMasterToken(t *testing.T) {
-	config := Config{
-		Auth: struct {
-			Enable      bool
-			MasterToken string
-		}{
-			Enable:      true,
-			MasterToken: "",
-		},
-	}
+	config := defaultConfig
+	
+	config.Auth.MasterToken = ""
+
 	err := validateAuth(config)
 	if err == nil {
 		t.Errorf("Expected error for empty master token, got nil")
@@ -19,15 +14,10 @@ func TestAuthValidationBlankMasterToken(t *testing.T) {
 }
 
 func TestAuthValidationShortMasterToken(t *testing.T) {
-	config := Config{
-		Auth: struct {
-			Enable      bool
-			MasterToken string
-		}{
-			Enable:      true,
-			MasterToken: "short",
-		},
-	}
+	config := defaultConfig
+	
+	config.Auth.MasterToken = "short"
+
 	err := validateAuth(config)
 	if err == nil {
 		t.Errorf("Expected error for short master token, got nil")
@@ -35,15 +25,10 @@ func TestAuthValidationShortMasterToken(t *testing.T) {
 }
 
 func TestAuthValidationValidMasterToken(t *testing.T) {
-	config := Config{
-		Auth: struct {
-			Enable      bool
-			MasterToken string
-		}{
-			Enable:      true,
-			MasterToken: "thisisavalidmastertokenthatis32chars",
-		},
-	}
+	config := defaultConfig
+	
+	config.Auth.MasterToken = "thisisavalidmastertokenthatis32chars"
+
 	err := validateAuth(config)
 	if err != nil {
 		t.Errorf("Expected no error for valid master token, got %v", err)
@@ -51,7 +36,8 @@ func TestAuthValidationValidMasterToken(t *testing.T) {
 }
 
 func TestServiceValidationInvalidPort(t *testing.T) {
-	config := Config{
+	config := defaultConfig
+	config = Config{
 		Service: struct {
 			Port string
 		}{
@@ -65,7 +51,8 @@ func TestServiceValidationInvalidPort(t *testing.T) {
 }
 
 func TestServiceValidationValidPort(t *testing.T) {
-	config := Config{
+	config := defaultConfig
+	config = Config{
 		Service: struct {
 			Port string
 		}{
@@ -79,13 +66,10 @@ func TestServiceValidationValidPort(t *testing.T) {
 }
 
 func TestStorageValidationUnsupportedBackend(t *testing.T) {
-	config := Config{
-		Storage: struct {
-			Backend string
-		}{
-			Backend: "unsupported",
-		},
-	}
+	config := defaultConfig
+
+	config.Storage.Backend = "unsupported"
+
 	err := validateStorage(config)
 	if err == nil {
 		t.Errorf("Expected error for unsupported storage backend, got nil")
@@ -93,13 +77,10 @@ func TestStorageValidationUnsupportedBackend(t *testing.T) {
 }
 
 func TestStorageValidationSupportedBackend(t *testing.T) {
-	config := Config{
-		Storage: struct {
-			Backend string
-		}{
-			Backend: "memory",
-		},
-	}
+	config := defaultConfig
+
+	config.Storage.Backend = "memory"
+
 	err := validateStorage(config)
 	if err != nil {
 		t.Errorf("Expected no error for supported storage backend, got %v", err)

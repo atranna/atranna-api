@@ -2,12 +2,16 @@ package router
 
 import (
 	"atranna-api/src/internal/config"
+	"atranna-api/src/internal/database"
 	"atranna-api/src/internal/handlers"
 	v1_devices "atranna-api/src/internal/handlers/v1/devices"
 	v1_interfaces "atranna-api/src/internal/handlers/v1/interfaces"
 	v1_networks "atranna-api/src/internal/handlers/v1/networks"
 	"atranna-api/src/internal/middlewares"
+	"atranna-api/src/internal/repository"
 	"atranna-api/src/internal/repository/memory"
+	"atranna-api/src/internal/repository/postgres"
+	"atranna-api/src/internal/repository/sqlite"
 
 	"github.com/gin-gonic/gin"
 )
@@ -21,14 +25,29 @@ func New() *gin.Engine {
 
 	r.GET("/ping", handlers.Ping)
 
-	var deviceRepo *memory.DeviceRepository
-	var interfaceRepo *memory.InterfaceRepository
-	var networkRepo *memory.NetworkRepository
+	var deviceRepo repository.DeviceRepository
+	var interfaceRepo repository.InterfaceRepository
+	var networkRepo repository.NetworkRepository
 	
-	if config.Current.Storage.Backend == "memory" {
+	switch config.Current.Storage.Backend {
+	case "memory":
 		deviceRepo = memory.NewDeviceRepository()
 		interfaceRepo = memory.NewInterfaceRepository(deviceRepo)
 		networkRepo = memory.NewNetworkRepository()
+	case "postgres":
+		database.Init()
+		database.ApplyPostgresMigrations()
+
+		deviceRepo = postgres.NewDeviceRepository(database.DB)
+		interfaceRepo = postgres.NewInterfaceRepository(database.DB, deviceRepo)
+		networkRepo = postgres.NewNetworkRepository(database.DB)
+	case "sqlite":
+		database.Init()
+		database.ApplySQLiteMigrations()
+
+		deviceRepo = sqlite.NewDeviceRepository(database.DB)
+		interfaceRepo = sqlite.NewInterfaceRepository(database.DB, deviceRepo)
+		networkRepo = sqlite.NewNetworkRepository(database.DB)
 	}
 
 	devicesHandler := v1_devices.NewHandler(deviceRepo, interfaceRepo)

@@ -5,7 +5,7 @@ import (
 )
 
 type DeviceRepository interface {
-	Add(device models.Device) models.Device
+	Add(device models.Device) (models.Device, error)
 	GetByID(id int) (models.Device, bool)
 	GetAll() []models.Device
 	Delete(id int) (models.Device, bool)
@@ -17,11 +17,11 @@ type InterfaceRepository interface {
 	GetAll() []models.Interface
 	GetByDeviceID(deviceID int) []models.Interface
 	Delete(id int) (models.Interface, bool)
-	DeleteByDeviceID(deviceID int)
+	DeleteByDeviceID(deviceID int) error
 }
 
 type NetworkRepository interface {
-	Add(network models.Network) models.Network
+	Add(network models.Network) (models.Network, error)
 	GetByID(id int) (models.Network, bool)
 	GetAll() []models.Network
 	Delete(id int) (models.Network, bool)

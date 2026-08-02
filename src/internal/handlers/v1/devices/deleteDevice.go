@@ -14,13 +14,16 @@ func (h *Handler) Delete(c *gin.Context) {
 		return
 	}
 
+	if err := h.interfaces.DeleteByDeviceID(id); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
 	_, deleted := h.devices.Delete(id)
 	if !deleted {
 		c.JSON(http.StatusNotFound, gin.H{"error": "device not found"})
 		return
 	}
-
-	h.interfaces.DeleteByDeviceID(id)
 
 	c.Status(http.StatusNoContent)
 }

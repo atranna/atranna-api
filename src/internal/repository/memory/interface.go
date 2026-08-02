@@ -60,7 +60,7 @@ func (r *InterfaceRepository) Delete(id int) (models.Interface, bool) {
 	return models.Interface{}, false
 }
 
-func (r *InterfaceRepository) DeleteByDeviceID(deviceID int) {
+func (r *InterfaceRepository) DeleteByDeviceID(deviceID int) error {
 	filtered := make([]models.Interface, 0, len(r.interfaces))
 	for _, interf := range r.interfaces {
 		if interf.DeviceID != deviceID {
@@ -68,4 +68,5 @@ func (r *InterfaceRepository) DeleteByDeviceID(deviceID int) {
 		}
 	}
 	r.interfaces = filtered
+	return nil
 }
