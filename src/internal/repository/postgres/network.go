@@ -1,4 +1,4 @@
-package sqlite
+package postgres
 
 import (
 	"database/sql"
@@ -15,20 +15,18 @@ func NewNetworkRepository(db *sql.DB) *NetworkRepository {
 }
 
 func (r *NetworkRepository) Add(network models.Network) models.Network {
-	res, err := r.db.Exec(
-		`INSERT INTO networks (name, cidr, gateway, vlan) VALUES (?, ?, ?, ?)`,
+	err := r.db.QueryRow(
+		`INSERT INTO networks (name, cidr, gateway, vlan) VALUES ($1, $2, $3, $4) RETURNING id`,
 		network.Name, network.CIDR, network.Gateway, network.Vlan,
-	)
+	).Scan(&network.ID)
 	if err != nil {
 		return models.Network{}
 	}
-	id, _ := res.LastInsertId()
-	network.ID = int(id)
 	return network
 }
 
 func (r *NetworkRepository) GetByID(id int) (models.Network, bool) {
-	row := r.db.QueryRow(`SELECT id, name, cidr, gateway, vlan FROM networks WHERE id = ?`, id)
+	row := r.db.QueryRow(`SELECT id, name, cidr, gateway, vlan FROM networks WHERE id = $1`, id)
 	var network models.Network
 	var vlan sql.NullInt64
 	err := row.Scan(&network.ID, &network.Name, &network.CIDR, &network.Gateway, &vlan)
@@ -64,7 +62,7 @@ func (r *NetworkRepository) GetAll() []models.Network {
 }
 
 func (r *NetworkRepository) Delete(id int) (models.Network, bool) {
-	res, err := r.db.Exec(`DELETE FROM networks WHERE id = ?`, id)
+	res, err := r.db.Exec(`DELETE FROM networks WHERE id = $1`, id)
 	if err != nil {
 		return models.Network{}, false
 	}
