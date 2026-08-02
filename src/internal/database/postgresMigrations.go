@@ -13,7 +13,7 @@ func ApplyPostgresMigrations() {
 		panic(err)
 	}	
 	m, err := migrate.NewWithDatabaseInstance(
-        "file://etc/atranna-api/migrations",
+        "file://etc/atranna-api/migrations/postgres",
         "postgres", driver)
 	if err != nil {
 		panic(err)
