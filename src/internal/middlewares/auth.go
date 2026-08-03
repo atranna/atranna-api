@@ -3,6 +3,7 @@ package middlewares
 import (
 	"atranna-api/src/internal/config"
 	"atranna-api/src/internal/helpers"
+	"net/http"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -26,7 +27,18 @@ func AuthMiddleware() gin.HandlerFunc {
         if strings.HasPrefix(strings.ToLower(token), "bearer ") {
             token = strings.TrimSpace(token[len("bearer "):])
         }
+        if token == "" {
+            c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+            return
+        }
 
+        userID, err := helpers.ValidateJWT(token)
+        if err != nil {
+            c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+            return
+        }
+
+        c.Set("user_id", userID)
         c.Next()
     }
 }
