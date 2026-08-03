@@ -11,7 +11,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func TestDevices(t *testing.T) {
+func TestOrganizations(t *testing.T) {
 	organizationRepo := memory.NewOrganizationRepository()
 	handler := NewHandler(organizationRepo)
 
