@@ -33,3 +33,10 @@ type OrganizationRepository interface {
 	GetAll() []models.Organization
 	Delete(id int) (models.Organization, bool)
 }
+
+type UsersRepository interface {
+	Add(user models.User) (models.User, error)
+	GetByID(id int) (models.User, bool)
+	GetAll() []models.User
+	Delete(id int) (models.User, bool)
+}
