@@ -19,6 +19,7 @@ func AuthMiddleware() gin.HandlerFunc {
         authorization := c.GetHeader("Authorization")
 
         if helpers.CheckAuthorization(authorization, config.Current) {
+            c.Set("user_id", -1)
             c.Next()
             return
         }

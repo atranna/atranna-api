@@ -81,7 +81,7 @@ func New() *gin.Engine {
 	apiV1Protected := apiV1.Group("", middlewares.AuthMiddleware())
 
 	// Organizations
-	organizationsGroup := apiV1Protected.Group("/organizations")
+	organizationsGroup := apiV1Protected.Group("/organizations", middlewares.BlockMasterTokenMiddleware())
 	organizationsGroup.GET("", organizationHandler.GetOrganizations)
 	organizationsGroup.GET("/:id", organizationHandler.GetOrganization)
 	organizationsGroup.POST("", organizationHandler.Add)
@@ -105,21 +105,21 @@ func New() *gin.Engine {
 	organizationsGroup.DELETE("/:id/members/:user_id", organizationMembersHandler.DeleteOrganizationMember)
 
 	// Devices
-	devicesGroup := apiV1Protected.Group("/devices")
+	devicesGroup := apiV1Protected.Group("/devices", middlewares.BlockMasterTokenMiddleware())
 	devicesGroup.GET("", devicesHandler.GetDevices)
 	devicesGroup.GET("/:id", devicesHandler.GetDevice)
 	devicesGroup.POST("", devicesHandler.Add)
 	devicesGroup.DELETE("/:id", devicesHandler.Delete)
 
 	// Interfaces
-	interfacesGroup := apiV1Protected.Group("/interfaces")
+	interfacesGroup := apiV1Protected.Group("/interfaces", middlewares.BlockMasterTokenMiddleware())
 	interfacesGroup.GET("", interfacesHandler.GetInterfaces)
 	interfacesGroup.GET("/:id", interfacesHandler.GetInterface)
 	interfacesGroup.POST("", interfacesHandler.Add)
 	interfacesGroup.DELETE("/:id", interfacesHandler.Delete)
 
 	// Networks
-	networksGroup := apiV1Protected.Group("/networks")
+	networksGroup := apiV1Protected.Group("/networks", middlewares.BlockMasterTokenMiddleware())
 	networksGroup.GET("", networksHandler.GetNetworks)
 	networksGroup.GET("/:id", networksHandler.GetNetwork)
 	networksGroup.POST("", networksHandler.Add)
