@@ -35,15 +35,15 @@ func validateAuth(cfg Config) error {
 		if len(cfg.Auth.MasterToken) < 32 {
 			return fmt.Errorf("master token must be at least 32 characters long.")
 		}
-	}
 
-	if cfg.Auth.JWTSecret == "" {
-		return fmt.Errorf("JWT secret must be set.")
-	}
+		if cfg.Auth.JWTSecret == "" {
+			return fmt.Errorf("JWT secret must be set.")
+		}
 
-	// Validate the JWT secret is at least 32 characters long
-	if len(cfg.Auth.JWTSecret) < 32 {
-		return fmt.Errorf("JWT secret must be at least 32 characters long.")
+		// Validate the JWT secret is at least 32 characters long
+		if len(cfg.Auth.JWTSecret) < 32 {
+			return fmt.Errorf("JWT secret must be at least 32 characters long.")
+		}
 	}
 
 	return nil
