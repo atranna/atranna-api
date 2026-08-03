@@ -8,8 +8,6 @@ func (h *Handler) GetSelf(c *gin.Context) {
 		c.JSON(404, gin.H{"error": "user not found"})
 		return
 	}
-
-	user.PasswordHash = "REDACTED"
-
+	
 	c.JSON(200, user)
 }
