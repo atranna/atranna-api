@@ -22,7 +22,7 @@ func (h *Handler) DeleteOrganizationMember(c *gin.Context) {
 
 	removedMember, ok := h.organizationMembers.Delete(organizationID, userID)
 	if !ok {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to remove member"})
+		c.JSON(http.StatusNotFound, gin.H{"error": "member not found"})
 		return
 	}
 
