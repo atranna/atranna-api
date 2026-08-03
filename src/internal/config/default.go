@@ -10,9 +10,13 @@ var defaultConfig = Config{
 	Auth: struct {
 		Enable      bool
 		MasterToken string
+		JWTSecret   string
+		ExpirationHours int
 	}{
 		Enable:      true,
 		MasterToken: "",
+		JWTSecret:   "",
+		ExpirationHours: 24,
 	},
 	Storage: struct {
 		Backend string

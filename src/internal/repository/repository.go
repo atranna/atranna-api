@@ -26,3 +26,25 @@ type NetworkRepository interface {
 	GetAll() []models.Network
 	Delete(id int) (models.Network, bool)
 }
+
+type OrganizationRepository interface {
+	Add(organization models.Organization) (models.Organization, error)
+	GetByID(id int) (models.Organization, bool)
+	GetAll() []models.Organization
+	Delete(id int) (models.Organization, bool)
+}
+
+type UsersRepository interface {
+	Add(user models.User) (models.User, error)
+	GetByID(id int) (models.User, bool)
+	GetByUsername(username string) (models.User, bool)
+	GetAll() []models.User
+	Delete(id int) (models.User, bool)
+}
+
+type OrganizationMemberRepository interface {
+	Add(member models.OrganizationMember) (models.OrganizationMember, error)
+	GetByOrganizationID(organizationID int) ([]models.OrganizationMember, error)
+	GetByUserID(userID int) []models.OrganizationMember
+	Delete(organizationID int, userID int) (models.OrganizationMember, bool)
+}

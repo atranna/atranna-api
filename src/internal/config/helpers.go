@@ -24,3 +24,15 @@ func getEnvAsBool(key string, defaultValue bool) bool {
 	}
 	return value
 }
+
+func getEnvAsInt(key string, defaultValue int) int {
+	valueStr := getEnv(key, "")
+	if valueStr == "" {
+		return defaultValue
+	}
+	value, err := strconv.Atoi(valueStr)
+	if err != nil {
+		return defaultValue
+	}
+	return value
+}
