@@ -15,8 +15,8 @@ func NewUserRepository(db *sql.DB) *UserRepository {
 
 func (r *UserRepository) Add(user models.User) (models.User, error) {
 	err := r.db.QueryRow(
-		`INSERT INTO users (email, username, password_hash, display_name, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id`,
-		user.Email, user.Username, user.PasswordHash, user.DisplayName, user.CreatedAt, user.UpdatedAt,
+		`INSERT INTO users (email, username, password_hash, display_name) VALUES ($1, $2, $3, $4) RETURNING id`,
+		user.Email, user.Username, user.PasswordHash, user.DisplayName,
 	).Scan(&user.ID)
 	if err != nil {
 		return models.User{}, err
@@ -25,9 +25,9 @@ func (r *UserRepository) Add(user models.User) (models.User, error) {
 }
 
 func (r *UserRepository) GetByID(id int) (models.User, bool) {
-	row := r.db.QueryRow(`SELECT id, email, username, password_hash, display_name, created_at, updated_at FROM users WHERE id = $1`, id)
+	row := r.db.QueryRow(`SELECT id, email, username, password_hash, display_name FROM users WHERE id = $1`, id)
 	var user models.User
-	err := row.Scan(&user.ID, &user.Email, &user.Username, &user.PasswordHash, &user.DisplayName, &user.CreatedAt, &user.UpdatedAt)
+	err := row.Scan(&user.ID, &user.Email, &user.Username, &user.PasswordHash, &user.DisplayName)
 	if err != nil {
 		return models.User{}, false
 	}
@@ -35,7 +35,7 @@ func (r *UserRepository) GetByID(id int) (models.User, bool) {
 }
 
 func (r *UserRepository) GetAll() []models.User {
-	rows, err := r.db.Query(`SELECT id, email, username, password_hash, display_name, created_at, updated_at FROM users`)
+	rows, err := r.db.Query(`SELECT id, email, username, password_hash, display_name FROM users`)
 	if err != nil {
 		return []models.User{}
 	}
@@ -44,7 +44,7 @@ func (r *UserRepository) GetAll() []models.User {
 	var users []models.User
 	for rows.Next() {
 		var user models.User
-		err := rows.Scan(&user.ID, &user.Email, &user.Username, &user.PasswordHash, &user.DisplayName, &user.CreatedAt, &user.UpdatedAt)
+		err := rows.Scan(&user.ID, &user.Email, &user.Username, &user.PasswordHash, &user.DisplayName)
 		if err != nil {
 			continue
 		}
@@ -57,9 +57,9 @@ func (r *UserRepository) GetAll() []models.User {
 }
 
 func (r *UserRepository) Delete(id int) (models.User, bool) {
-	row := r.db.QueryRow(`SELECT id, email, username, password_hash, display_name, created_at, updated_at FROM users WHERE id = $1`, id)
+	row := r.db.QueryRow(`SELECT id, email, username, password_hash, display_name FROM users WHERE id = $1`, id)
 	var user models.User
-	err := row.Scan(&user.ID, &user.Email, &user.Username, &user.PasswordHash, &user.DisplayName, &user.CreatedAt, &user.UpdatedAt)
+	err := row.Scan(&user.ID, &user.Email, &user.Username, &user.PasswordHash, &user.DisplayName)
 	if err != nil {
 		return models.User{}, false
 	}
