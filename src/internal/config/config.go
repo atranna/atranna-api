@@ -8,6 +8,7 @@ type Config struct {
 	Auth struct {
 		Enable bool
 		MasterToken string
+		JWTSecret string
 	}
 	Storage struct {
 		Backend string

@@ -10,9 +10,11 @@ var defaultConfig = Config{
 	Auth: struct {
 		Enable      bool
 		MasterToken string
+		JWTSecret   string
 	}{
 		Enable:      true,
 		MasterToken: "",
+		JWTSecret:   "",
 	},
 	Storage: struct {
 		Backend string

@@ -11,6 +11,7 @@ func Load() {
 	Current.Debug = getEnvAsBool("DEBUG", defaultConfig.Debug)
 	Current.Auth.Enable = getEnvAsBool("AUTH_ENABLE", defaultConfig.Auth.Enable)
 	Current.Auth.MasterToken = getEnv("AUTH_MASTER_TOKEN", defaultConfig.Auth.MasterToken)
+	Current.Auth.JWTSecret = getEnv("AUTH_JWT_SECRET", defaultConfig.Auth.JWTSecret)
 	Current.Service.Port = getEnv("SERVICE_PORT", defaultConfig.Service.Port)
 	Current.Storage.Backend = getEnv("STORAGE_BACKEND", defaultConfig.Storage.Backend)
 	Current.Storage.Postgres.Host = getEnv("STORAGE_POSTGRES_HOST", defaultConfig.Storage.Postgres.Host)
