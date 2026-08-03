@@ -1,9 +1,10 @@
 package helpers
 
 import (
-	"atranna-api/src/internal/config"
 	"crypto/subtle"
 	"strings"
+
+	"github.com/atranna/atranna-api/src/internal/config"
 )
 
 func CheckAuthorization(authorizationHeader string, config config.Config) bool {

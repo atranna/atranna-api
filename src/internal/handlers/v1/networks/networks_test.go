@@ -1,12 +1,13 @@
 package networks
 
 import (
-	"atranna-api/src/internal/repository/memory"
 	"bytes"
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/atranna/atranna-api/src/internal/repository/memory"
 
 	"github.com/gin-gonic/gin"
 )

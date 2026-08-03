@@ -1,7 +1,7 @@
 package interfaces
 
 import (
-	"atranna-api/src/internal/repository"
+	"github.com/atranna/atranna-api/src/internal/repository"
 )
 
 type Handler struct {

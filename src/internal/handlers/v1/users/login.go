@@ -1,7 +1,7 @@
 package users
 
 import (
-	"atranna-api/src/internal/helpers"
+	"github.com/atranna/atranna-api/src/internal/helpers"
 
 	"github.com/gin-gonic/gin"
 )

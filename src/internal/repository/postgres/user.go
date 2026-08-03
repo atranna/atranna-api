@@ -1,8 +1,9 @@
 package postgres
 
 import (
-	"atranna-api/src/internal/models"
 	"database/sql"
+
+	"github.com/atranna/atranna-api/src/internal/models"
 )
 
 type UserRepository struct {

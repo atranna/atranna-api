@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strconv"
 
-	"atranna-api/src/internal/config"
+	"github.com/atranna/atranna-api/src/internal/config"
 
 	"github.com/golang-jwt/jwt/v5"
 )

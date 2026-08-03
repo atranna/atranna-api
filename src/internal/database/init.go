@@ -1,8 +1,9 @@
 package database
 
 import (
-	"atranna-api/src/internal/config"
 	"database/sql"
+
+	"github.com/atranna/atranna-api/src/internal/config"
 )
 
 var DB *sql.DB

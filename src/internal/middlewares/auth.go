@@ -1,10 +1,11 @@
 package middlewares
 
 import (
-	"atranna-api/src/internal/config"
-	"atranna-api/src/internal/helpers"
 	"net/http"
 	"strings"
+
+	"github.com/atranna/atranna-api/src/internal/config"
+	"github.com/atranna/atranna-api/src/internal/helpers"
 
 	"github.com/gin-gonic/gin"
 )

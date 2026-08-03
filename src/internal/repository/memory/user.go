@@ -1,6 +1,6 @@
 package memory
 
-import "atranna-api/src/internal/models"
+import "github.com/atranna/atranna-api/src/internal/models"
 
 type UserRepository struct {
 	users []models.User

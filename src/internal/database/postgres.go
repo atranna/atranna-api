@@ -1,9 +1,10 @@
 package database
 
 import (
-	"atranna-api/src/internal/config"
 	"database/sql"
 	"fmt"
+
+	"github.com/atranna/atranna-api/src/internal/config"
 
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 

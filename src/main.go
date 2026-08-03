@@ -1,8 +1,8 @@
 package main
 
 import (
-	"atranna-api/src/internal/config"
-	"atranna-api/src/internal/router"
+	"github.com/atranna/atranna-api/src/internal/config"
+	"github.com/atranna/atranna-api/src/internal/router"
 )
 
 

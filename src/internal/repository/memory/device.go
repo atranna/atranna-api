@@ -1,7 +1,7 @@
 package memory
 
 import (
-	"atranna-api/src/internal/models"
+	"github.com/atranna/atranna-api/src/internal/models"
 )
 
 type DeviceRepository struct {

@@ -1,13 +1,14 @@
 package interfaces
 
 import (
-	devices "atranna-api/src/internal/handlers/v1/devices"
-	"atranna-api/src/internal/repository/memory"
 	"bytes"
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	devices "github.com/atranna/atranna-api/src/internal/handlers/v1/devices"
+	"github.com/atranna/atranna-api/src/internal/repository/memory"
 
 	"github.com/gin-gonic/gin"
 )

@@ -5,8 +5,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"atranna-api/src/internal/helpers"
-	"atranna-api/src/internal/models"
+	"github.com/atranna/atranna-api/src/internal/helpers"
+	"github.com/atranna/atranna-api/src/internal/models"
 )
 
 func (h *Handler) Add(c *gin.Context) {

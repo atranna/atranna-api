@@ -3,7 +3,7 @@ package postgres
 import (
 	"database/sql"
 
-	"atranna-api/src/internal/models"
+	"github.com/atranna/atranna-api/src/internal/models"
 )
 
 type NetworkRepository struct {

@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"atranna-api/src/internal/models"
+	"github.com/atranna/atranna-api/src/internal/models"
 
 	"github.com/gin-gonic/gin"
 )
