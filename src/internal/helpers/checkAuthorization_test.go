@@ -10,6 +10,7 @@ func TestAuthorizationPass(t *testing.T) {
 		Auth: struct {
 			Enable      bool
 			MasterToken string
+			JWTSecret   string
 		}{
 			Enable:      true,
 			MasterToken: "testtoken",
@@ -26,6 +27,7 @@ func TestAuthorizationFail(t *testing.T) {
 		Auth: struct {
 			Enable      bool
 			MasterToken string
+			JWTSecret   string
 		}{
 			Enable:      true,
 			MasterToken: "testtoken",
@@ -42,6 +44,7 @@ func TestAuthorizationDisabled(t *testing.T) {
 		Auth: struct {
 			Enable      bool
 			MasterToken string
+			JWTSecret   string
 		}{
 			Enable: false,
 		},
@@ -57,6 +60,7 @@ func TestAuthorizationEmptyToken(t *testing.T) {
 		Auth: struct {
 			Enable      bool
 			MasterToken string
+			JWTSecret   string
 		}{
 			Enable:      true,
 			MasterToken: "",
