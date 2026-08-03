@@ -37,6 +37,7 @@ type OrganizationRepository interface {
 type UsersRepository interface {
 	Add(user models.User) (models.User, error)
 	GetByID(id int) (models.User, bool)
+	GetByUsername(username string) (models.User, bool)
 	GetAll() []models.User
 	Delete(id int) (models.User, bool)
 }

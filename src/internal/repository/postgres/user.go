@@ -34,6 +34,16 @@ func (r *UserRepository) GetByID(id int) (models.User, bool) {
 	return user, true
 }
 
+func (r *UserRepository) GetByUsername(username string) (models.User, bool) {
+	row := r.db.QueryRow(`SELECT id, email, username, password_hash, display_name FROM users WHERE username = $1`, username)
+	var user models.User
+	err := row.Scan(&user.ID, &user.Email, &user.Username, &user.PasswordHash, &user.DisplayName)
+	if err != nil {
+		return models.User{}, false
+	}
+	return user, true
+}
+
 func (r *UserRepository) GetAll() []models.User {
 	rows, err := r.db.Query(`SELECT id, email, username, password_hash, display_name FROM users`)
 	if err != nil {

@@ -17,24 +17,22 @@ func (h *Handler) Login(c *gin.Context) {
 		return
 	}
 
-	users := h.users.GetAll()
-
-	for _, user := range users {
-		if user.Username == request.Username {
-			if !helpers.CheckPasswordHash(request.Password, user.PasswordHash) {
-				c.JSON(401, gin.H{"error": "Invalid username or password"})
-				return
-			}
-
-			token, err := helpers.GenerateJWT(user.ID)
-			if err != nil {
-				c.JSON(500, gin.H{"error": "Failed to generate token"})
-				return
-			}
-
-			c.JSON(200, gin.H{"token": token})
-			return
-		}
+	user, ok := h.users.GetByUsername(request.Username)
+	if !ok {
+		c.JSON(401, gin.H{"error": "Invalid username or password"})
+		return
 	}
-	c.JSON(401, gin.H{"error": "Invalid username or password"})
+
+	if !helpers.CheckPasswordHash(request.Password, user.PasswordHash) {
+		c.JSON(401, gin.H{"error": "Invalid username or password"})
+		return
+	}
+
+	token, err := helpers.GenerateJWT(user.ID)
+	if err != nil {
+		c.JSON(500, gin.H{"error": "Failed to generate token"})
+		return
+	}
+
+	c.JSON(200, gin.H{"token": token})
 }

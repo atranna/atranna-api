@@ -27,6 +27,15 @@ func (r *UserRepository) GetByID(id int) (models.User, bool) {
 	return models.User{}, false
 }
 
+func (r *UserRepository) GetByUsername(username string) (models.User, bool) {
+	for _, user := range r.users {
+		if user.Username == username {
+			return user, true
+		}
+	}
+	return models.User{}, false
+}
+
 func (r *UserRepository) GetAll() []models.User {
 	return r.users
 }
