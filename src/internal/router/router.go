@@ -93,6 +93,7 @@ func New() *gin.Engine {
 	usersGroup.GET("/:id", usersHandler.GetUser)
 	usersGroup.POST("", usersHandler.Add)
 	usersGroup.DELETE("/:id", usersHandler.Delete)
+	usersGroup.GET("/me", usersHandler.GetSelf)
 
 	// Auth
 	authGroup := apiV1.Group("/auth")
