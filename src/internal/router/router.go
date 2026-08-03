@@ -8,6 +8,7 @@ import (
 	v1_interfaces "atranna-api/src/internal/handlers/v1/interfaces"
 	v1_networks "atranna-api/src/internal/handlers/v1/networks"
 	v1_organizations "atranna-api/src/internal/handlers/v1/organizations"
+	v1_users "atranna-api/src/internal/handlers/v1/users"
 	"atranna-api/src/internal/middlewares"
 	"atranna-api/src/internal/repository"
 	"atranna-api/src/internal/repository/memory"
@@ -27,6 +28,7 @@ func New() *gin.Engine {
 	r.GET("/ping", handlers.Ping)
 
 	var organizationRepo repository.OrganizationRepository
+	var userRepo repository.UsersRepository
 
 	var deviceRepo repository.DeviceRepository
 	var interfaceRepo repository.InterfaceRepository
@@ -35,6 +37,7 @@ func New() *gin.Engine {
 	switch config.Current.Storage.Backend {
 	case "memory":
 		organizationRepo = memory.NewOrganizationRepository()
+		userRepo = memory.NewUserRepository()
 
 		deviceRepo = memory.NewDeviceRepository()
 		interfaceRepo = memory.NewInterfaceRepository(deviceRepo)
@@ -44,6 +47,7 @@ func New() *gin.Engine {
 		database.ApplyPostgresMigrations()
 
 		organizationRepo = postgres.NewOrganizationRepository(database.DB)
+		userRepo = postgres.NewUserRepository(database.DB)
 
 		deviceRepo = postgres.NewDeviceRepository(database.DB)
 		interfaceRepo = postgres.NewInterfaceRepository(database.DB, deviceRepo)
@@ -53,6 +57,7 @@ func New() *gin.Engine {
 		database.ApplySQLiteMigrations()
 
 		organizationRepo = sqlite.NewOrganizationRepository(database.DB)
+		userRepo = sqlite.NewUserRepository(database.DB)
 
 		deviceRepo = sqlite.NewDeviceRepository(database.DB)
 		interfaceRepo = sqlite.NewInterfaceRepository(database.DB, deviceRepo)
@@ -60,6 +65,7 @@ func New() *gin.Engine {
 	}
 
 	organizationHandler := v1_organizations.NewHandler(organizationRepo)
+	usersHandler := v1_users.NewHandler(userRepo)
 
 	devicesHandler := v1_devices.NewHandler(deviceRepo, interfaceRepo)
 	interfacesHandler := v1_interfaces.NewHandler(interfaceRepo)
@@ -72,6 +78,12 @@ func New() *gin.Engine {
 	apiV1.GET("/organizations/:id", organizationHandler.GetOrganization)
 	apiV1.POST("/organizations", organizationHandler.Add)
 	apiV1.DELETE("/organizations/:id", organizationHandler.Delete)
+
+	// Users
+	apiV1.GET("/users", usersHandler.GetUsers)
+	apiV1.GET("/users/:id", usersHandler.GetUser)
+	apiV1.POST("/users", usersHandler.Add)
+	apiV1.DELETE("/users/:id", usersHandler.Delete)
 
 	// Devices
 	apiV1.GET("/devices", devicesHandler.GetDevices)
