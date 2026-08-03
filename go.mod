@@ -1,4 +1,4 @@
-module atranna-api
+module github.com/atranna/atranna-api
 
 go 1.26.5
 
