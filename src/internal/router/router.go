@@ -77,43 +77,52 @@ func New() *gin.Engine {
 	interfacesHandler := v1_interfaces.NewHandler(interfaceRepo)
 	networksHandler := v1_networks.NewHandler(networkRepo)
 
-	apiV1 := r.Group("/api/v1", middlewares.AuthMiddleware())
+	apiV1 := r.Group("/api/v1")
+	apiV1Protected := apiV1.Group("", middlewares.AuthMiddleware())
 
 	// Organizations
-	apiV1.GET("/organizations", organizationHandler.GetOrganizations)
-	apiV1.GET("/organizations/:id", organizationHandler.GetOrganization)
-	apiV1.POST("/organizations", organizationHandler.Add)
-	apiV1.DELETE("/organizations/:id", organizationHandler.Delete)
+	organizationsGroup := apiV1Protected.Group("/organizations")
+	organizationsGroup.GET("", organizationHandler.GetOrganizations)
+	organizationsGroup.GET("/:id", organizationHandler.GetOrganization)
+	organizationsGroup.POST("", organizationHandler.Add)
+	organizationsGroup.DELETE("/:id", organizationHandler.Delete)
 
 	// Users
-	apiV1.GET("/users", usersHandler.GetUsers)
-	apiV1.GET("/users/:id", usersHandler.GetUser)
-	apiV1.POST("/users", usersHandler.Add)
-	apiV1.DELETE("/users/:id", usersHandler.Delete)
-	apiV1.POST("/login", usersHandler.Login)
+	usersGroup := apiV1Protected.Group("/users")
+	usersGroup.GET("", usersHandler.GetUsers)
+	usersGroup.GET("/:id", usersHandler.GetUser)
+	usersGroup.POST("", usersHandler.Add)
+	usersGroup.DELETE("/:id", usersHandler.Delete)
+
+	// Auth
+	authGroup := apiV1.Group("/auth")
+	authGroup.POST("/login", usersHandler.Login)
 
 	// Organization Members
-	apiV1.GET("/organizations/:id/members", organizationMembersHandler.GetOrganizationMembers)
-	apiV1.POST("/organizations/:id/members", organizationMembersHandler.AddOrganizationMember)
-	apiV1.DELETE("/organizations/:id/members/:user_id", organizationMembersHandler.DeleteOrganizationMember)
+	organizationsGroup.GET("/:id/members", organizationMembersHandler.GetOrganizationMembers)
+	organizationsGroup.POST("/:id/members", organizationMembersHandler.AddOrganizationMember)
+	organizationsGroup.DELETE("/:id/members/:user_id", organizationMembersHandler.DeleteOrganizationMember)
 
 	// Devices
-	apiV1.GET("/devices", devicesHandler.GetDevices)
-	apiV1.GET("/devices/:id", devicesHandler.GetDevice)
-	apiV1.POST("/devices", devicesHandler.Add)
-	apiV1.DELETE("/devices/:id", devicesHandler.Delete)
+	devicesGroup := apiV1Protected.Group("/devices")
+	devicesGroup.GET("", devicesHandler.GetDevices)
+	devicesGroup.GET("/:id", devicesHandler.GetDevice)
+	devicesGroup.POST("", devicesHandler.Add)
+	devicesGroup.DELETE("/:id", devicesHandler.Delete)
 
 	// Interfaces
-	apiV1.GET("/interfaces", interfacesHandler.GetInterfaces)
-	apiV1.GET("/interfaces/:id", interfacesHandler.GetInterface)
-	apiV1.POST("/interfaces", interfacesHandler.Add)
-	apiV1.DELETE("/interfaces/:id", interfacesHandler.Delete)
+	interfacesGroup := apiV1Protected.Group("/interfaces")
+	interfacesGroup.GET("", interfacesHandler.GetInterfaces)
+	interfacesGroup.GET("/:id", interfacesHandler.GetInterface)
+	interfacesGroup.POST("", interfacesHandler.Add)
+	interfacesGroup.DELETE("/:id", interfacesHandler.Delete)
 
 	// Networks
-	apiV1.GET("/networks", networksHandler.GetNetworks)
-	apiV1.GET("/networks/:id", networksHandler.GetNetwork)
-	apiV1.POST("/networks", networksHandler.Add)
-	apiV1.DELETE("/networks/:id", networksHandler.Delete)
+	networksGroup := apiV1Protected.Group("/networks")
+	networksGroup.GET("", networksHandler.GetNetworks)
+	networksGroup.GET("/:id", networksHandler.GetNetwork)
+	networksGroup.POST("", networksHandler.Add)
+	networksGroup.DELETE("/:id", networksHandler.Delete)
 
 	return r
 }
