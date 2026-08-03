@@ -90,6 +90,7 @@ func New() *gin.Engine {
 	apiV1.GET("/users/:id", usersHandler.GetUser)
 	apiV1.POST("/users", usersHandler.Add)
 	apiV1.DELETE("/users/:id", usersHandler.Delete)
+	apiV1.POST("/login", usersHandler.Login)
 
 	// Organization Members
 	apiV1.GET("/organizations/:id/members", organizationMembersHandler.GetOrganizationMembers)

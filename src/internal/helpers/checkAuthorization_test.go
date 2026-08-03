@@ -11,6 +11,7 @@ func TestAuthorizationPass(t *testing.T) {
 			Enable      bool
 			MasterToken string
 			JWTSecret   string
+			ExpirationHours int
 		}{
 			Enable:      true,
 			MasterToken: "testtoken",
@@ -28,6 +29,7 @@ func TestAuthorizationFail(t *testing.T) {
 			Enable      bool
 			MasterToken string
 			JWTSecret   string
+			ExpirationHours int
 		}{
 			Enable:      true,
 			MasterToken: "testtoken",
@@ -45,6 +47,7 @@ func TestAuthorizationDisabled(t *testing.T) {
 			Enable      bool
 			MasterToken string
 			JWTSecret   string
+			ExpirationHours int
 		}{
 			Enable: false,
 		},
@@ -61,6 +64,7 @@ func TestAuthorizationEmptyToken(t *testing.T) {
 			Enable      bool
 			MasterToken string
 			JWTSecret   string
+			ExpirationHours int
 		}{
 			Enable:      true,
 			MasterToken: "",

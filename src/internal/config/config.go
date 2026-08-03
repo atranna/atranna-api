@@ -9,6 +9,7 @@ type Config struct {
 		Enable bool
 		MasterToken string
 		JWTSecret string
+		ExpirationHours int
 	}
 	Storage struct {
 		Backend string
