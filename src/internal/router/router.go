@@ -8,6 +8,7 @@ import (
 	v1_interfaces "atranna-api/src/internal/handlers/v1/interfaces"
 	v1_networks "atranna-api/src/internal/handlers/v1/networks"
 	v1_organizations "atranna-api/src/internal/handlers/v1/organizations"
+	organizationMembers "atranna-api/src/internal/handlers/v1/organzationMembers"
 	v1_users "atranna-api/src/internal/handlers/v1/users"
 	"atranna-api/src/internal/middlewares"
 	"atranna-api/src/internal/repository"
@@ -29,6 +30,7 @@ func New() *gin.Engine {
 
 	var organizationRepo repository.OrganizationRepository
 	var userRepo repository.UsersRepository
+	var organizationMembersRepo repository.OrganizationMemberRepository
 
 	var deviceRepo repository.DeviceRepository
 	var interfaceRepo repository.InterfaceRepository
@@ -38,6 +40,7 @@ func New() *gin.Engine {
 	case "memory":
 		organizationRepo = memory.NewOrganizationRepository()
 		userRepo = memory.NewUserRepository()
+		organizationMembersRepo = memory.NewOrganizationMemberRepository()
 
 		deviceRepo = memory.NewDeviceRepository()
 		interfaceRepo = memory.NewInterfaceRepository(deviceRepo)
@@ -48,6 +51,7 @@ func New() *gin.Engine {
 
 		organizationRepo = postgres.NewOrganizationRepository(database.DB)
 		userRepo = postgres.NewUserRepository(database.DB)
+		organizationMembersRepo = postgres.NewOrganizationMemberRepository(database.DB)
 
 		deviceRepo = postgres.NewDeviceRepository(database.DB)
 		interfaceRepo = postgres.NewInterfaceRepository(database.DB, deviceRepo)
@@ -58,6 +62,7 @@ func New() *gin.Engine {
 
 		organizationRepo = sqlite.NewOrganizationRepository(database.DB)
 		userRepo = sqlite.NewUserRepository(database.DB)
+		organizationMembersRepo = sqlite.NewOrganizationMemberRepository(database.DB)
 
 		deviceRepo = sqlite.NewDeviceRepository(database.DB)
 		interfaceRepo = sqlite.NewInterfaceRepository(database.DB, deviceRepo)
@@ -66,6 +71,7 @@ func New() *gin.Engine {
 
 	organizationHandler := v1_organizations.NewHandler(organizationRepo)
 	usersHandler := v1_users.NewHandler(userRepo)
+	organizationMembersHandler := organizationMembers.NewHandler(organizationMembersRepo)
 
 	devicesHandler := v1_devices.NewHandler(deviceRepo, interfaceRepo)
 	interfacesHandler := v1_interfaces.NewHandler(interfaceRepo)
@@ -84,6 +90,11 @@ func New() *gin.Engine {
 	apiV1.GET("/users/:id", usersHandler.GetUser)
 	apiV1.POST("/users", usersHandler.Add)
 	apiV1.DELETE("/users/:id", usersHandler.Delete)
+
+	// Organization Members
+	apiV1.GET("/organizations/:id/members", organizationMembersHandler.GetOrganizationMembers)
+	apiV1.POST("/organizations/:id/members", organizationMembersHandler.AddOrganizationMember)
+	apiV1.DELETE("/organizations/:id/members/:user_id", organizationMembersHandler.DeleteOrganizationMember)
 
 	// Devices
 	apiV1.GET("/devices", devicesHandler.GetDevices)

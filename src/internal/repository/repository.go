@@ -43,7 +43,7 @@ type UsersRepository interface {
 
 type OrganizationMemberRepository interface {
 	Add(member models.OrganizationMember) (models.OrganizationMember, error)
-	GetByOrganizationID(organizationID int) []models.OrganizationMember
+	GetByOrganizationID(organizationID int) ([]models.OrganizationMember, error)
 	GetByUserID(userID int) []models.OrganizationMember
 	Delete(organizationID int, userID int) (models.OrganizationMember, bool)
 }
