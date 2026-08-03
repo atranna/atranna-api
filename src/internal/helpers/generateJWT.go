@@ -18,7 +18,6 @@ func GenerateJWT(userID int) (string, error) {
 	now := time.Now()
 	claims := jwt.MapClaims{
 		"sub": fmt.Sprintf("%d", userID),
-		"uid": userID,
 		"iat": now.Unix(),
 		"exp": now.Add(time.Duration(config.Current.Auth.ExpirationHours) * time.Hour).Unix(),
 	}
