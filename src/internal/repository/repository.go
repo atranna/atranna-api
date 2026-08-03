@@ -26,3 +26,10 @@ type NetworkRepository interface {
 	GetAll() []models.Network
 	Delete(id int) (models.Network, bool)
 }
+
+type OrganizationRepository interface {
+	Add(organization models.Organization) (models.Organization, error)
+	GetByID(id int) (models.Organization, bool)
+	GetAll() []models.Organization
+	Delete(id int) (models.Organization, bool)
+}
