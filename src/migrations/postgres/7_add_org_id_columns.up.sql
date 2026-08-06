@@ -1,0 +1,3 @@
+ALTER TABLE IF EXISTS devices ADD COLUMN org_id integer NOT NULL;
+ALTER TABLE IF EXISTS interfaces ADD COLUMN org_id integer NOT NULL;
+ALTER TABLE IF EXISTS networks ADD COLUMN org_id integer NOT NULL;

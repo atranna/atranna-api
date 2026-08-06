@@ -16,8 +16,8 @@ func NewDeviceRepository(db *sql.DB) *DeviceRepository {
 
 func (r *DeviceRepository) Add(device models.Device) (models.Device, error) {
 	err := r.db.QueryRow(
-		`INSERT INTO devices (hostname, ip, vendor, model, type) VALUES ($1, $2, $3, $4, $5) RETURNING id`,
-		device.Hostname, device.IP, device.Vendor, device.Model, device.Type,
+		`INSERT INTO devices (hostname, ip, vendor, model, type, org_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id`,
+		device.Hostname, device.IP, device.Vendor, device.Model, device.Type, device.OrgID,
 	).Scan(&device.ID)
 	if err != nil {
 		return models.Device{}, err
@@ -26,9 +26,9 @@ func (r *DeviceRepository) Add(device models.Device) (models.Device, error) {
 }
 
 func (r *DeviceRepository) GetByID(id int) (models.Device, bool) {
-	row := r.db.QueryRow(`SELECT id, hostname, ip, vendor, model, type FROM devices WHERE id = $1`, id)
+	row := r.db.QueryRow(`SELECT id, hostname, ip, vendor, model, type, org_id FROM devices WHERE id = $1`, id)
 	var device models.Device
-	err := row.Scan(&device.ID, &device.Hostname, &device.IP, &device.Vendor, &device.Model, &device.Type)
+	err := row.Scan(&device.ID, &device.Hostname, &device.IP, &device.Vendor, &device.Model, &device.Type, &device.OrgID)
 	if err != nil {
 		return models.Device{}, false
 	}
@@ -36,7 +36,7 @@ func (r *DeviceRepository) GetByID(id int) (models.Device, bool) {
 }
 
 func (r *DeviceRepository) GetAll() []models.Device {
-	rows, err := r.db.Query(`SELECT id, hostname, ip, vendor, model, type FROM devices`)
+	rows, err := r.db.Query(`SELECT id, hostname, ip, vendor, model, type, org_id FROM devices`)
 	if err != nil {
 		return []models.Device{}
 	}
@@ -45,7 +45,7 @@ func (r *DeviceRepository) GetAll() []models.Device {
 	var devices []models.Device
 	for rows.Next() {
 		var device models.Device
-		err := rows.Scan(&device.ID, &device.Hostname, &device.IP, &device.Vendor, &device.Model, &device.Type)
+		err := rows.Scan(&device.ID, &device.Hostname, &device.IP, &device.Vendor, &device.Model, &device.Type, &device.OrgID)
 		if err != nil {
 			continue
 		}

@@ -7,4 +7,5 @@ type Device struct {
 	Vendor   string `json:"vendor" binding:"required"`
 	Model    string `json:"model" binding:"required"`
 	Type     string `json:"type" binding:"required"`
+	OrgID    int   `json:"org_id" binding:"required"`
 }
