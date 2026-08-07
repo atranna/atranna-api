@@ -6,8 +6,9 @@ import (
 
 type Handler struct {
 	users    repository.UsersRepository
+	organizationMember repository.OrganizationMemberRepository
 }
 
-func NewHandler(users repository.UsersRepository) *Handler {
-	return &Handler{users: users}
+func NewHandler(users repository.UsersRepository, organizationMember repository.OrganizationMemberRepository) *Handler {
+	return &Handler{users: users, organizationMember: organizationMember}
 }

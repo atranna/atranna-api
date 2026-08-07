@@ -71,7 +71,7 @@ func New() *gin.Engine {
 	}
 
 	organizationHandler := v1_organizations.NewHandler(organizationRepo)
-	usersHandler := v1_users.NewHandler(userRepo)
+	usersHandler := v1_users.NewHandler(userRepo, organizationMembersRepo)
 	organizationMembersHandler := organizationMembers.NewHandler(organizationMembersRepo)
 
 	devicesHandler := v1_devices.NewHandler(deviceRepo, interfaceRepo)

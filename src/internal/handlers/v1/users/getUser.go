@@ -7,6 +7,14 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+type userWithOrgs struct {
+	ID 		int      `json:"id"`
+	Email 	string   `json:"email"`
+	Username string   `json:"username"`
+	DisplayName string `json:"display_name"`
+	Orgs     []int `json:"orgs"`
+}
+
 func (h *Handler) GetUser(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -20,5 +28,20 @@ func (h *Handler) GetUser(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, user)
+	orgMembers := h.organizationMember.GetByUserID(id)
+	orgs := make([]int, len(orgMembers))
+	for i, om := range orgMembers {
+		orgs[i] = om.OrganizationID
+	}
+
+	userWithOrgs := userWithOrgs{
+		ID:          user.ID,
+		Email:       user.Email,
+		Username:    user.Username,
+		DisplayName: user.DisplayName,
+		Orgs:        orgs,
+	}
+
+
+	c.JSON(http.StatusOK, userWithOrgs)
 }
