@@ -21,7 +21,7 @@ var Catalog = []Permission{
 	{Key: "users:read", Resource: "users", Action: "read", Description: "Read actions on users (e.g. GET /users, GET /users/:id)"},
 	{Key: "users:write", Resource: "users", Action: "write", Description: "Write actions on users (e.g. POST /users, DELETE /users/:id)"},
 	{Key: "organization_members:read", Resource: "organization_members", Action: "read", Description: "Read actions on organization members (e.g. GET /organizations/:id/members, GET /organizations/:id/members/:user_id)"},
-	{Key: "organization_members:write", Resource: "organization_members", Action: "write", Description: "Write actions on organization members (e.g. POST /organizations/:id/members, DELETE /organizations/:id/members/:user_id"},
+	{Key: "organization_members:write", Resource: "organization_members", Action: "write", Description: "Write actions on organization members (e.g. POST /organizations/:id/members, DELETE /organizations/:id/members/:user_id)"},
 	{Key: "roles:read", Resource: "roles", Action: "read", Description: "Read actions on roles (e.g. GET /roles, GET /roles/:id)"},
 	{Key: "roles:write", Resource: "roles", Action: "write", Description: "Write actions on roles (e.g. POST /roles, DELETE /roles/:id)"},
 }
