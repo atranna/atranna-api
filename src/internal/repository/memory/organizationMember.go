@@ -44,3 +44,12 @@ func (r *OrganizationMemberRepository) Delete(organizationID int, userID int) (m
 	}
 	return models.OrganizationMember{}, false
 }
+
+func (r *OrganizationMemberRepository) GetRole(organizationID int, userID int) (string, bool) {
+	for _, member := range r.organizationMembers {
+		if member.OrganizationID == organizationID && member.UserID == userID {
+			return member.Role, true
+		}
+	}
+	return "", false
+}

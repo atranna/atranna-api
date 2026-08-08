@@ -2,7 +2,6 @@ package organizationMembers
 
 import (
 	"net/http"
-	"strconv"
 
 	"github.com/atranna/atranna-api/src/internal/models"
 
@@ -10,11 +9,7 @@ import (
 )
 
 func (h *Handler) AddOrganizationMember(c *gin.Context) {
-	organizationID, err := strconv.Atoi(c.Param("id"))
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid organization ID"})
-		return
-	}
+	organizationID := c.GetInt("org_id")
 
 	var request struct {
 		UserID int `json:"user_id" binding:"required"`

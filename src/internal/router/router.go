@@ -101,9 +101,11 @@ func New() *gin.Engine {
 	authGroup.POST("/login", usersHandler.Login)
 
 	// Organization Members
-	organizationsGroup.GET("/:id/members", organizationMembersHandler.GetOrganizationMembers)
-	organizationsGroup.POST("/:id/members", organizationMembersHandler.AddOrganizationMember)
-	organizationsGroup.DELETE("/:id/members/:user_id", organizationMembersHandler.DeleteOrganizationMember)
+	organizationMembersGroup := apiV1Protected.Group("/organization-members", middlewares.BlockMasterTokenMiddleware())
+	organizationMembersGroup.GET("", organizationMembersHandler.GetOrganizationMembers)
+	organizationMembersGroup.GET("/:user_id", organizationMembersHandler.GetOrganizationMember)
+	organizationMembersGroup.POST("", organizationMembersHandler.AddOrganizationMember)
+	organizationMembersGroup.DELETE("/:user_id", organizationMembersHandler.DeleteOrganizationMember)
 
 	// Devices
 	devicesGroup := apiV1Protected.Group("/devices", middlewares.BlockMasterTokenMiddleware())

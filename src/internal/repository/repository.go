@@ -47,4 +47,5 @@ type OrganizationMemberRepository interface {
 	GetByOrganizationID(organizationID int) ([]models.OrganizationMember, error)
 	GetByUserID(userID int) []models.OrganizationMember
 	Delete(organizationID int, userID int) (models.OrganizationMember, bool)
+	GetRole(organizationID int, userID int) (string, bool)
 }

@@ -2,6 +2,7 @@ package middlewares
 
 import (
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/atranna/atranna-api/src/internal/config"
@@ -47,7 +48,13 @@ func AuthMiddleware() gin.HandlerFunc {
             c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "X-Org-ID header is required"})
             return
         }
-        c.Set("org_id", org)
+
+        orgID, err := strconv.Atoi(org)
+        if err != nil {
+            c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "X-Org-ID must be a valid integer"})
+            return
+        }
+        c.Set("org_id", orgID)
 
         c.Next()
     }

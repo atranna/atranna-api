@@ -17,9 +17,9 @@ func NewOrganizationMemberRepository(db *sql.DB) *OrganizationMemberRepository {
 func (r *OrganizationMemberRepository) Add(member models.OrganizationMember) (models.OrganizationMember, error) {
 	var createdMember models.OrganizationMember
 	err := r.db.QueryRow(
-		`INSERT INTO organization_members (organization_id, user_id) VALUES ($1, $2) RETURNING organization_id, user_id`,
-		member.OrganizationID, member.UserID,
-	).Scan(&createdMember.OrganizationID, &createdMember.UserID)
+		`INSERT INTO organization_members (organization_id, user_id, role) VALUES ($1, $2, $3) RETURNING organization_id, user_id, role`,
+		member.OrganizationID, member.UserID, member.Role,
+	).Scan(&createdMember.OrganizationID, &createdMember.UserID, &createdMember.Role)
 	if err != nil {
 		return models.OrganizationMember{}, err
 	}
@@ -27,7 +27,7 @@ func (r *OrganizationMemberRepository) Add(member models.OrganizationMember) (mo
 }
 
 func (r *OrganizationMemberRepository) GetByOrganizationID(organizationID int) ([]models.OrganizationMember, error) {
-	rows, err := r.db.Query(`SELECT organization_id, user_id FROM organization_members WHERE organization_id = $1`, organizationID)
+	rows, err := r.db.Query(`SELECT organization_id, user_id, role FROM organization_members WHERE organization_id = $1`, organizationID)
 	if err != nil {
 		return nil, err
 	}
@@ -36,7 +36,7 @@ func (r *OrganizationMemberRepository) GetByOrganizationID(organizationID int) (
 	var members []models.OrganizationMember
 	for rows.Next() {
 		var member models.OrganizationMember
-		err := rows.Scan(&member.OrganizationID, &member.UserID)
+		err := rows.Scan(&member.OrganizationID, &member.UserID, &member.Role)
 		if err != nil {
 			return nil, err
 		}
@@ -49,7 +49,7 @@ func (r *OrganizationMemberRepository) GetByOrganizationID(organizationID int) (
 }
 
 func (r *OrganizationMemberRepository) GetByUserID(userID int) []models.OrganizationMember {
-	rows, err := r.db.Query(`SELECT organization_id, user_id FROM organization_members WHERE user_id = $1`, userID)
+	rows, err := r.db.Query(`SELECT organization_id, user_id, role FROM organization_members WHERE user_id = $1`, userID)
 	if err != nil {
 		return nil
 	}
@@ -58,7 +58,7 @@ func (r *OrganizationMemberRepository) GetByUserID(userID int) []models.Organiza
 	var members []models.OrganizationMember
 	for rows.Next() {
 		var member models.OrganizationMember
-		err := rows.Scan(&member.OrganizationID, &member.UserID)
+		err := rows.Scan(&member.OrganizationID, &member.UserID, &member.Role)
 		if err != nil {
 			return nil
 		}
@@ -71,11 +71,21 @@ func (r *OrganizationMemberRepository) GetByUserID(userID int) []models.Organiza
 }
 
 func (r *OrganizationMemberRepository) Delete(organizationID int, userID int) (models.OrganizationMember, bool) {
-	row := r.db.QueryRow(`DELETE FROM organization_members WHERE organization_id = $1 AND user_id = $2 RETURNING organization_id, user_id`, organizationID, userID)
+	row := r.db.QueryRow(`DELETE FROM organization_members WHERE organization_id = $1 AND user_id = $2 RETURNING organization_id, user_id, role`, organizationID, userID)
 	var member models.OrganizationMember
-	err := row.Scan(&member.OrganizationID, &member.UserID)
+	err := row.Scan(&member.OrganizationID, &member.UserID, &member.Role)
 	if err != nil {
 		return models.OrganizationMember{}, false
 	}
 	return member, true
+}
+
+func (r *OrganizationMemberRepository) GetRole(organizationID int, userID int) (string, bool) {
+	row := r.db.QueryRow(`SELECT role FROM organization_members WHERE organization_id = $1 AND user_id = $2`, organizationID, userID)
+	var role string
+	err := row.Scan(&role)
+	if err != nil {
+		return "", false
+	}
+	return role, true
 }
