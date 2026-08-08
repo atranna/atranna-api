@@ -41,6 +41,14 @@ func AuthMiddleware() gin.HandlerFunc {
         }
 
         c.Set("user_id", userID)
+
+        org := c.GetHeader("X-Org-ID")
+        if org == "" {
+            c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "X-Org-ID header is required"})
+            return
+        }
+        c.Set("org_id", org)
+
         c.Next()
     }
 }
