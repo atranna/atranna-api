@@ -7,8 +7,8 @@ import (
 	v1_devices "github.com/atranna/atranna-api/src/internal/handlers/v1/devices"
 	v1_interfaces "github.com/atranna/atranna-api/src/internal/handlers/v1/interfaces"
 	v1_networks "github.com/atranna/atranna-api/src/internal/handlers/v1/networks"
+	organizationMembers "github.com/atranna/atranna-api/src/internal/handlers/v1/organizationMembers"
 	v1_organizations "github.com/atranna/atranna-api/src/internal/handlers/v1/organizations"
-	organizationMembers "github.com/atranna/atranna-api/src/internal/handlers/v1/organzationMembers"
 	v1_users "github.com/atranna/atranna-api/src/internal/handlers/v1/users"
 	"github.com/atranna/atranna-api/src/internal/middlewares"
 	"github.com/atranna/atranna-api/src/internal/repository"
@@ -70,7 +70,7 @@ func New() *gin.Engine {
 		networkRepo = sqlite.NewNetworkRepository(database.DB)
 	}
 
-	organizationHandler := v1_organizations.NewHandler(organizationRepo)
+	organizationHandler := v1_organizations.NewHandler(organizationRepo, organizationMembersRepo)
 	usersHandler := v1_users.NewHandler(userRepo, organizationMembersRepo)
 	organizationMembersHandler := organizationMembers.NewHandler(organizationMembersRepo)
 
@@ -79,7 +79,7 @@ func New() *gin.Engine {
 	networksHandler := v1_networks.NewHandler(networkRepo)
 
 	apiV1 := r.Group("/api/v1")
-	apiV1Protected := apiV1.Group("", middlewares.AuthMiddleware())
+	apiV1Protected := apiV1.Group("", middlewares.AuthenticationMiddleware())
 
 	// Organizations
 	organizationsGroup := apiV1Protected.Group("/organizations", middlewares.BlockMasterTokenMiddleware())
@@ -101,7 +101,7 @@ func New() *gin.Engine {
 	authGroup.POST("/login", usersHandler.Login)
 
 	// Organization Members
-	organizationMembersGroup := apiV1Protected.Group("/organization-members", middlewares.BlockMasterTokenMiddleware())
+	organizationMembersGroup := apiV1Protected.Group("/organization-members", middlewares.BlockMasterTokenMiddleware(), middlewares.AuthorizationMiddleware())
 	organizationMembersGroup.GET("", organizationMembersHandler.GetOrganizationMembers)
 	organizationMembersGroup.GET("/:user_id", organizationMembersHandler.GetOrganizationMember)
 	organizationMembersGroup.POST("", organizationMembersHandler.AddOrganizationMember)

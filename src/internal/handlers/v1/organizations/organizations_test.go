@@ -14,7 +14,8 @@ import (
 
 func TestOrganizations(t *testing.T) {
 	organizationRepo := memory.NewOrganizationRepository()
-	handler := NewHandler(organizationRepo)
+	organizationMemberRepo := memory.NewOrganizationMemberRepository()
+	handler := NewHandler(organizationRepo, organizationMemberRepo)
 
 	router := gin.Default()
 	router.POST("/organizations", handler.Add)

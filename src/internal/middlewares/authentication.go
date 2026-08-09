@@ -2,7 +2,6 @@ package middlewares
 
 import (
 	"net/http"
-	"strconv"
 	"strings"
 
 	"github.com/atranna/atranna-api/src/internal/config"
@@ -11,7 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func AuthMiddleware() gin.HandlerFunc {
+func AuthenticationMiddleware() gin.HandlerFunc {
     return func(c *gin.Context) {
         if !config.Current.Auth.Enable {
             c.Next()
@@ -42,19 +41,6 @@ func AuthMiddleware() gin.HandlerFunc {
         }
 
         c.Set("user_id", userID)
-
-        org := c.GetHeader("X-Org-ID")
-        if org == "" {
-            c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "X-Org-ID header is required"})
-            return
-        }
-
-        orgID, err := strconv.Atoi(org)
-        if err != nil {
-            c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "X-Org-ID must be a valid integer"})
-            return
-        }
-        c.Set("org_id", orgID)
 
         c.Next()
     }
