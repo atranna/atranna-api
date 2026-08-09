@@ -7,7 +7,7 @@ import (
 	v1_devices "github.com/atranna/atranna-api/src/internal/handlers/v1/devices"
 	v1_interfaces "github.com/atranna/atranna-api/src/internal/handlers/v1/interfaces"
 	v1_networks "github.com/atranna/atranna-api/src/internal/handlers/v1/networks"
-	organizationMembers "github.com/atranna/atranna-api/src/internal/handlers/v1/organizationMembers"
+	v1_organization_members "github.com/atranna/atranna-api/src/internal/handlers/v1/organization_members"
 	v1_organizations "github.com/atranna/atranna-api/src/internal/handlers/v1/organizations"
 	v1_users "github.com/atranna/atranna-api/src/internal/handlers/v1/users"
 	"github.com/atranna/atranna-api/src/internal/middlewares"
@@ -72,7 +72,7 @@ func New() *gin.Engine {
 
 	organizationHandler := v1_organizations.NewHandler(organizationRepo, organizationMembersRepo)
 	usersHandler := v1_users.NewHandler(userRepo, organizationMembersRepo)
-	organizationMembersHandler := organizationMembers.NewHandler(organizationMembersRepo)
+	organizationMembersHandler := v1_organization_members.NewHandler(organizationMembersRepo)
 
 	devicesHandler := v1_devices.NewHandler(deviceRepo, interfaceRepo)
 	interfacesHandler := v1_interfaces.NewHandler(interfaceRepo)
