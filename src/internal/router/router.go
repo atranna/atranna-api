@@ -111,7 +111,7 @@ func New() *gin.Engine {
 	devicesGroup := apiV1Protected.Group("/devices", middlewares.BlockMasterTokenMiddleware())
 	devicesGroup.GET("", middlewares.AuthorizationMiddleware(), devicesHandler.GetDevices)
 	devicesGroup.GET("/:id", devicesHandler.GetDevice)
-	devicesGroup.POST("", devicesHandler.Add)
+	devicesGroup.POST("", middlewares.BlockMasterTokenMiddleware(), devicesHandler.Add)
 	devicesGroup.DELETE("/:id", devicesHandler.Delete)
 
 	// Interfaces
