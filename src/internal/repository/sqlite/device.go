@@ -37,8 +37,8 @@ func (r *DeviceRepository) GetByID(id int) (models.Device, bool) {
 	return device, true
 }
 
-func (r *DeviceRepository) GetAll() []models.Device {
-	rows, err := r.db.Query(`SELECT id, hostname, ip, vendor, model, type, org_id FROM devices`)
+func (r *DeviceRepository) GetAll(orgID int) []models.Device {
+	rows, err := r.db.Query(`SELECT id, hostname, ip, vendor, model, type, org_id FROM devices WHERE org_id = ?`, orgID)
 	if err != nil {
 		return []models.Device{}
 	}
