@@ -101,7 +101,7 @@ func New() *gin.Engine {
 	authGroup.POST("/login", usersHandler.Login)
 
 	// Organization Members
-	organizationMembersGroup := apiV1Protected.Group("/organization-members", middlewares.BlockMasterTokenMiddleware(), middlewares.AuthorizationMiddleware())
+	organizationMembersGroup := apiV1Protected.Group("/organization-members", middlewares.BlockMasterTokenMiddleware(), middlewares.AuthorizationMiddleware(organizationMembersRepo))
 	organizationMembersGroup.GET("", organizationMembersHandler.GetOrganizationMembers)
 	organizationMembersGroup.GET("/:user_id", organizationMembersHandler.GetOrganizationMember)
 	organizationMembersGroup.POST("", organizationMembersHandler.AddOrganizationMember)
@@ -109,7 +109,7 @@ func New() *gin.Engine {
 
 	// Devices
 	devicesGroup := apiV1Protected.Group("/devices", middlewares.BlockMasterTokenMiddleware())
-	devicesGroup.GET("", middlewares.AuthorizationMiddleware(), devicesHandler.GetDevices)
+	devicesGroup.GET("", middlewares.AuthorizationMiddleware(organizationMembersRepo), devicesHandler.GetDevices)
 	devicesGroup.GET("/:id", devicesHandler.GetDevice)
 	devicesGroup.POST("", middlewares.BlockMasterTokenMiddleware(), devicesHandler.Add)
 	devicesGroup.DELETE("/:id", devicesHandler.Delete)
