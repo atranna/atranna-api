@@ -23,12 +23,15 @@ func AuthorizationMiddleware(orgMembersRepo repository.OrganizationMemberReposit
         }
 
         userID := c.GetInt("user_id")
-        if _, isMember := orgMembersRepo.GetRole(orgID, userID); !isMember {
+        role, isMember := orgMembersRepo.GetRole(orgID, userID)
+        if !isMember {
             c.AbortWithStatusJSON(http.StatusForbidden, gin.H{"error": "You are not a member of this organization"})
             return
         }
 
         c.Set("org_id", orgID)
+
+        c.Set("role", role)
 
         c.Next()
     }

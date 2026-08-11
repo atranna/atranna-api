@@ -1,6 +1,7 @@
 package router
 
 import (
+	"github.com/atranna/atranna-api/src/internal/auth"
 	"github.com/atranna/atranna-api/src/internal/config"
 	"github.com/atranna/atranna-api/src/internal/database"
 	"github.com/atranna/atranna-api/src/internal/handlers"
@@ -109,24 +110,24 @@ func New() *gin.Engine {
 
 	// Devices
 	devicesGroup := apiV1Protected.Group("/devices", middlewares.BlockMasterTokenMiddleware())
-	devicesGroup.GET("", middlewares.AuthorizationMiddleware(organizationMembersRepo), devicesHandler.GetDevices)
-	devicesGroup.GET("/:id", devicesHandler.GetDevice)
-	devicesGroup.POST("", middlewares.BlockMasterTokenMiddleware(), devicesHandler.Add)
-	devicesGroup.DELETE("/:id", devicesHandler.Delete)
+	devicesGroup.GET("", middlewares.AuthorizationMiddleware(organizationMembersRepo), middlewares.RequirePermissionMiddleware(auth.DevicesRead), devicesHandler.GetDevices)
+	devicesGroup.GET("/:id", middlewares.AuthorizationMiddleware(organizationMembersRepo), middlewares.RequirePermissionMiddleware(auth.DevicesRead), devicesHandler.GetDevice)
+	devicesGroup.POST("", middlewares.BlockMasterTokenMiddleware(), middlewares.RequirePermissionMiddleware(auth.DevicesWrite), devicesHandler.Add)
+	devicesGroup.DELETE("/:id", middlewares.RequirePermissionMiddleware(auth.DevicesWrite), devicesHandler.Delete)
 
 	// Interfaces
 	interfacesGroup := apiV1Protected.Group("/interfaces", middlewares.BlockMasterTokenMiddleware())
-	interfacesGroup.GET("", interfacesHandler.GetInterfaces)
-	interfacesGroup.GET("/:id", interfacesHandler.GetInterface)
-	interfacesGroup.POST("", interfacesHandler.Add)
-	interfacesGroup.DELETE("/:id", interfacesHandler.Delete)
+	interfacesGroup.GET("", middlewares.AuthorizationMiddleware(organizationMembersRepo), middlewares.RequirePermissionMiddleware(auth.DevicesRead), interfacesHandler.GetInterfaces)
+	interfacesGroup.GET("/:id", middlewares.AuthorizationMiddleware(organizationMembersRepo), middlewares.RequirePermissionMiddleware(auth.DevicesRead), interfacesHandler.GetInterface)
+	interfacesGroup.POST("", middlewares.BlockMasterTokenMiddleware(), middlewares.RequirePermissionMiddleware(auth.DevicesWrite), interfacesHandler.Add)
+	interfacesGroup.DELETE("/:id", middlewares.RequirePermissionMiddleware(auth.DevicesWrite), interfacesHandler.Delete)
 
 	// Networks
 	networksGroup := apiV1Protected.Group("/networks", middlewares.BlockMasterTokenMiddleware())
-	networksGroup.GET("", networksHandler.GetNetworks)
-	networksGroup.GET("/:id", networksHandler.GetNetwork)
-	networksGroup.POST("", networksHandler.Add)
-	networksGroup.DELETE("/:id", networksHandler.Delete)
+	networksGroup.GET("", middlewares.AuthorizationMiddleware(organizationMembersRepo), middlewares.RequirePermissionMiddleware(auth.DevicesRead), networksHandler.GetNetworks)
+	networksGroup.GET("/:id", middlewares.AuthorizationMiddleware(organizationMembersRepo), middlewares.RequirePermissionMiddleware(auth.DevicesRead), networksHandler.GetNetwork)
+	networksGroup.POST("", middlewares.BlockMasterTokenMiddleware(), middlewares.RequirePermissionMiddleware(auth.DevicesWrite), networksHandler.Add)
+	networksGroup.DELETE("/:id", middlewares.RequirePermissionMiddleware(auth.DevicesWrite), networksHandler.Delete)
 
 	return r
 }
