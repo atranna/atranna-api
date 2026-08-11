@@ -10,12 +10,17 @@ import (
 func RequirePermissionMiddleware(key auth.PermissionKey) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		role := c.GetString("role")
+		if role == "owner" {
+			c.Next()
+			return
+		}
+
 		permissions, ok := auth.SystemRoles[role]
 		if !ok {
 			c.AbortWithStatusJSON(http.StatusForbidden, gin.H{"error": "invalid role"})
 			return
 		}
-
+		
 		for _, permission := range permissions {
 			if permission == key {
 				c.Next()
