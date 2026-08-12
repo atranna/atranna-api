@@ -13,13 +13,18 @@ func (h *Handler) AddOrganizationMember(c *gin.Context) {
 
 	var request struct {
 		UserID int `json:"user_id" binding:"required"`
+		Role   string `json:"role" binding:"required"`
 	}
 	if err := c.ShouldBindJSON(&request); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	newMember := models.OrganizationMember{OrganizationID: organizationID, UserID: request.UserID}
+	newMember := models.OrganizationMember{
+		OrganizationID: organizationID,
+		UserID:         request.UserID,
+		Role:           request.Role,
+	}
 	addedMember, err := h.organizationMembers.Add(newMember)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
