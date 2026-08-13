@@ -5,6 +5,9 @@ type Config struct {
 	Service struct {
 		Port string
 	}
+	CORS struct {
+		AllowedOrigins string
+	}
 	Auth struct {
 		Enable bool
 		MasterToken string
