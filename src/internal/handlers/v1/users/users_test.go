@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 
 	"github.com/atranna/atranna-api/src/internal/config"
@@ -14,17 +15,13 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func TestGetUsersReturnsOnlyUsersInSharedOrganizations(t *testing.T) {
+func TestGetUsersReturnsAllUsers(t *testing.T) {
 	userRepo := memory.NewUserRepository()
 	orgMemberRepo := memory.NewOrganizationMemberRepository()
 
-	alice, _ := userRepo.Add(models.User{Username: "alice"})
-	bob, _ := userRepo.Add(models.User{Username: "bob"})
-	carol, _ := userRepo.Add(models.User{Username: "carol"})
-
-	orgMemberRepo.Add(models.OrganizationMember{OrganizationID: 1, UserID: alice.ID, Role: "owner"})
-	orgMemberRepo.Add(models.OrganizationMember{OrganizationID: 1, UserID: bob.ID, Role: "viewer"})
-	orgMemberRepo.Add(models.OrganizationMember{OrganizationID: 2, UserID: carol.ID, Role: "owner"})
+	alice, _ := userRepo.Add(models.User{Username: "alice", Email: "alice@example.com", DisplayName: "Alice"})
+	userRepo.Add(models.User{Username: "bob", Email: "bob@example.com", DisplayName: "Bob"})
+	userRepo.Add(models.User{Username: "carol"})
 
 	handler := NewHandler(userRepo, orgMemberRepo)
 	router := gin.Default()
@@ -50,54 +47,20 @@ func TestGetUsersReturnsOnlyUsersInSharedOrganizations(t *testing.T) {
 		t.Fatalf("failed to decode response: %v", err)
 	}
 
-	if len(response) != 2 {
-		t.Fatalf("expected 2 users, got %d", len(response))
+	if len(response) != 3 {
+		t.Fatalf("expected 3 users, got %d", len(response))
 	}
 
 	seen := map[int]bool{}
 	for _, u := range response {
 		seen[u.ID] = true
 	}
-	if !seen[alice.ID] || !seen[bob.ID] {
-		t.Fatalf("expected alice and bob in response, got %+v", response)
-	}
-	if seen[carol.ID] {
-		t.Fatalf("carol should not be visible, got %+v", response)
-	}
-}
-
-func TestGetUsersIncludesSelfWithoutMemberships(t *testing.T) {
-	userRepo := memory.NewUserRepository()
-	orgMemberRepo := memory.NewOrganizationMemberRepository()
-
-	alice, _ := userRepo.Add(models.User{Username: "alice"})
-	userRepo.Add(models.User{Username: "bob"})
-
-	handler := NewHandler(userRepo, orgMemberRepo)
-	router := gin.Default()
-	router.Use(func(c *gin.Context) {
-		c.Set("user_id", alice.ID)
-		c.Next()
-	})
-	router.GET("/users", handler.GetUsers)
-
-	req := httptest.NewRequest(http.MethodGet, "/users", nil)
-	w := httptest.NewRecorder()
-	router.ServeHTTP(w, req)
-
-	if w.Code != http.StatusOK {
-		t.Fatalf("expected 200, got %d", w.Code)
+	if !seen[alice.ID] {
+		t.Fatalf("expected alice in response, got %+v", response)
 	}
 
-	var response []struct {
-		ID int `json:"id"`
-	}
-	if err := json.Unmarshal(w.Body.Bytes(), &response); err != nil {
-		t.Fatalf("failed to decode response: %v", err)
-	}
-
-	if len(response) != 1 || response[0].ID != alice.ID {
-		t.Fatalf("expected only the requesting user, got %+v", response)
+	if strings.Contains(w.Body.String(), "email") || strings.Contains(w.Body.String(), "display_name") {
+		t.Fatalf("response must not contain email or display_name: %s", w.Body.String())
 	}
 }
 

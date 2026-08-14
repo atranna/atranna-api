@@ -12,27 +12,11 @@ type user struct {
 }
 
 func (h *Handler) GetUsers(c *gin.Context) {
-	requestingUserID := c.GetInt("user_id")
+	allUsers := h.users.GetAll()
 
-	requesterMemberships := h.organizationMember.GetByUserID(requestingUserID)
-	requesterOrgs := make(map[int]struct{}, len(requesterMemberships))
-	for _, membership := range requesterMemberships {
-		requesterOrgs[membership.OrganizationID] = struct{}{}
-	}
-
-	users := []user{}
-	for _, u := range h.users.GetAll() {
-		if u.ID == requestingUserID {
-			users = append(users, user{ID: u.ID, Username: u.Username})
-			continue
-		}
-
-		for _, membership := range h.organizationMember.GetByUserID(u.ID) {
-			if _, ok := requesterOrgs[membership.OrganizationID]; ok {
-				users = append(users, user{ID: u.ID, Username: u.Username})
-				break
-			}
-		}
+	users := make([]user, 0, len(allUsers))
+	for _, u := range allUsers {
+		users = append(users, user{ID: u.ID, Username: u.Username})
 	}
 
 	c.JSON(http.StatusOK, users)
