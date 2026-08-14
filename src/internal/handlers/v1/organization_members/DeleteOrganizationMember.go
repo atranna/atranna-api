@@ -16,11 +16,11 @@ func (h *Handler) DeleteOrganizationMember(c *gin.Context) {
 		return
 	}
 
-	removedMember, ok := h.organizationMembers.Delete(organizationID, userID)
+	_, ok := h.organizationMembers.Delete(organizationID, userID)
 	if !ok {
 		c.JSON(http.StatusNotFound, gin.H{"error": "member not found"})
 		return
 	}
 
-	c.JSON(http.StatusOK, removedMember)
+	c.JSON(http.StatusOK, gin.H{"message": "User successfully removed"})
 }
