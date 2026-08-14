@@ -8,4 +8,5 @@ type Interface struct {
 	Name        string `json:"name" binding:"required"`
 	State       string `json:"state"`
 	Speed       int    `json:"speed"`
+	OrgID    int   `json:"org_id" binding:"required"`
 }

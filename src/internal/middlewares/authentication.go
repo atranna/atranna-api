@@ -10,7 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func AuthMiddleware() gin.HandlerFunc {
+func AuthenticationMiddleware() gin.HandlerFunc {
     return func(c *gin.Context) {
         if !config.Current.Auth.Enable {
             c.Next()
@@ -41,6 +41,7 @@ func AuthMiddleware() gin.HandlerFunc {
         }
 
         c.Set("user_id", userID)
+
         c.Next()
     }
 }

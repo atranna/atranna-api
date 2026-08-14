@@ -16,8 +16,8 @@ func NewDeviceRepository(db *sql.DB) *DeviceRepository {
 
 func (r *DeviceRepository) Add(device models.Device) (models.Device, error) {
 	res, err := r.db.Exec(
-		`INSERT INTO devices (hostname, ip, vendor, model, type) VALUES (?, ?, ?, ?, ?)`,
-		device.Hostname, device.IP, device.Vendor, device.Model, device.Type,
+		`INSERT INTO devices (hostname, ip, vendor, model, type, org_id) VALUES (?, ?, ?, ?, ?, ?)`,
+		device.Hostname, device.IP, device.Vendor, device.Model, device.Type, device.OrgID,
 	)
 	if err != nil {
 		return models.Device{}, err
@@ -28,17 +28,17 @@ func (r *DeviceRepository) Add(device models.Device) (models.Device, error) {
 }
 
 func (r *DeviceRepository) GetByID(id int) (models.Device, bool) {
-	row := r.db.QueryRow(`SELECT id, hostname, ip, vendor, model, type FROM devices WHERE id = ?`, id)
+	row := r.db.QueryRow(`SELECT id, hostname, ip, vendor, model, type, org_id FROM devices WHERE id = ?`, id)
 	var device models.Device
-	err := row.Scan(&device.ID, &device.Hostname, &device.IP, &device.Vendor, &device.Model, &device.Type)
+	err := row.Scan(&device.ID, &device.Hostname, &device.IP, &device.Vendor, &device.Model, &device.Type, &device.OrgID)
 	if err != nil {
 		return models.Device{}, false
 	}
 	return device, true
 }
 
-func (r *DeviceRepository) GetAll() []models.Device {
-	rows, err := r.db.Query(`SELECT id, hostname, ip, vendor, model, type FROM devices`)
+func (r *DeviceRepository) GetAll(orgID int) []models.Device {
+	rows, err := r.db.Query(`SELECT id, hostname, ip, vendor, model, type, org_id FROM devices WHERE org_id = ?`, orgID)
 	if err != nil {
 		return []models.Device{}
 	}
@@ -47,7 +47,7 @@ func (r *DeviceRepository) GetAll() []models.Device {
 	var devices []models.Device
 	for rows.Next() {
 		var device models.Device
-		err := rows.Scan(&device.ID, &device.Hostname, &device.IP, &device.Vendor, &device.Model, &device.Type)
+		err := rows.Scan(&device.ID, &device.Hostname, &device.IP, &device.Vendor, &device.Model, &device.Type, &device.OrgID)
 		if err != nil {
 			continue
 		}

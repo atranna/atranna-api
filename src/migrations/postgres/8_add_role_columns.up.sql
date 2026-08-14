@@ -1,0 +1,1 @@
+ALTER TABLE IF EXISTS organization_members ADD COLUMN role VARCHAR(255) NOT NULL;

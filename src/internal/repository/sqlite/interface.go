@@ -18,8 +18,8 @@ func NewInterfaceRepository(db *sql.DB, devices repository.DeviceRepository) *In
 
 func (r *InterfaceRepository) Add(interf models.Interface) (models.Interface, error) {
 	res, err := r.db.Exec(
-		`INSERT INTO interfaces (name, device_id, ip_address, mac_address, state, speed) VALUES (?, ?, ?, ?, ?, ?)`,
-		interf.Name, interf.DeviceID, interf.IPAddress, interf.MACAddress, interf.State, interf.Speed,
+		`INSERT INTO interfaces (name, device_id, ip_address, mac_address, state, speed, org_id) VALUES (?, ?, ?, ?, ?, ?, ?)`,
+		interf.Name, interf.DeviceID, interf.IPAddress, interf.MACAddress, interf.State, interf.Speed, interf.OrgID,
 	)
 	if err != nil {
 		return models.Interface{}, err
@@ -30,9 +30,9 @@ func (r *InterfaceRepository) Add(interf models.Interface) (models.Interface, er
 }
 
 func (r *InterfaceRepository) GetByID(id int) (models.Interface, bool) {
-	row := r.db.QueryRow(`SELECT id, name, device_id, ip_address, mac_address, state, speed FROM interfaces WHERE id = ?`, id)
+	row := r.db.QueryRow(`SELECT id, name, device_id, ip_address, mac_address, state, speed, org_id FROM interfaces WHERE id = ?`, id)
 	var interf models.Interface
-	err := row.Scan(&interf.ID, &interf.Name, &interf.DeviceID, &interf.IPAddress, &interf.MACAddress, &interf.State, &interf.Speed)
+	err := row.Scan(&interf.ID, &interf.Name, &interf.DeviceID, &interf.IPAddress, &interf.MACAddress, &interf.State, &interf.Speed, &interf.OrgID)
 	if err != nil {
 		return models.Interface{}, false
 	}
@@ -40,7 +40,7 @@ func (r *InterfaceRepository) GetByID(id int) (models.Interface, bool) {
 }
 
 func (r *InterfaceRepository) GetAll() ([]models.Interface) {
-	rows, err := r.db.Query(`SELECT id, name, device_id, ip_address, mac_address, state, speed FROM interfaces`)
+	rows, err := r.db.Query(`SELECT id, name, device_id, ip_address, mac_address, state, speed, org_id FROM interfaces`)
 	if err != nil {
 		return []models.Interface{}
 	}
@@ -49,7 +49,7 @@ func (r *InterfaceRepository) GetAll() ([]models.Interface) {
 	var interfaces []models.Interface
 	for rows.Next() {
 		var interf models.Interface
-		err := rows.Scan(&interf.ID, &interf.Name, &interf.DeviceID, &interf.IPAddress, &interf.MACAddress, &interf.State, &interf.Speed)
+		err := rows.Scan(&interf.ID, &interf.Name, &interf.DeviceID, &interf.IPAddress, &interf.MACAddress, &interf.State, &interf.Speed, &interf.OrgID)
 		if err != nil {
 			continue
 		}
@@ -62,7 +62,7 @@ func (r *InterfaceRepository) GetAll() ([]models.Interface) {
 }
 
 func (r *InterfaceRepository) GetByDeviceID(deviceID int) []models.Interface {
-	rows, err := r.db.Query(`SELECT id, name, device_id, ip_address, mac_address, state, speed FROM interfaces WHERE device_id = ?`, deviceID)
+	rows, err := r.db.Query(`SELECT id, name, device_id, ip_address, mac_address, state, speed, org_id FROM interfaces WHERE device_id = ?`, deviceID)
 	if err != nil {
 		return []models.Interface{}
 	}
@@ -71,7 +71,7 @@ func (r *InterfaceRepository) GetByDeviceID(deviceID int) []models.Interface {
 	var interfaces []models.Interface
 	for rows.Next() {
 		var interf models.Interface
-		err := rows.Scan(&interf.ID, &interf.Name, &interf.DeviceID, &interf.IPAddress, &interf.MACAddress, &interf.State, &interf.Speed)
+		err := rows.Scan(&interf.ID, &interf.Name, &interf.DeviceID, &interf.IPAddress, &interf.MACAddress, &interf.State, &interf.Speed, &interf.OrgID)
 		if err != nil {
 			continue
 		}

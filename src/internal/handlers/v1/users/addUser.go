@@ -5,11 +5,17 @@ import (
 
 	"github.com/gin-gonic/gin"
 
+	"github.com/atranna/atranna-api/src/internal/config"
 	"github.com/atranna/atranna-api/src/internal/helpers"
 	"github.com/atranna/atranna-api/src/internal/models"
 )
 
 func (h *Handler) Add(c *gin.Context) {
+	if !config.Current.Auth.UserCreationEnabled {
+		c.JSON(http.StatusForbidden, gin.H{"error": "user creation is disabled"})
+		return
+	}
+
 	var request struct {
 		Email       string `json:"email"`
 		Username    string `json:"username" binding:"required"`

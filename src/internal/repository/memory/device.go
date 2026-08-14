@@ -29,8 +29,14 @@ func (r *DeviceRepository) GetByID(id int) (models.Device, bool) {
 	return models.Device{}, false
 }
 
-func (r *DeviceRepository) GetAll() []models.Device {
-	return r.devices
+func (r *DeviceRepository) GetAll(orgID int) []models.Device {
+	var devices []models.Device
+	for _, device := range r.devices {
+		if device.OrgID == orgID {
+			devices = append(devices, device)
+		}
+	}
+	return devices
 }
 
 func (r *DeviceRepository) Delete(id int) (models.Device, bool) {

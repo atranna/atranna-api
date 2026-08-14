@@ -17,11 +17,13 @@ var defaultConfig = Config{
 		MasterToken string
 		JWTSecret   string
 		ExpirationHours int
+		UserCreationEnabled bool
 	}{
 		Enable:      true,
 		MasterToken: "",
 		JWTSecret:   "",
 		ExpirationHours: 24,
+		UserCreationEnabled: true,
 	},
 	Storage: struct {
 		Backend string

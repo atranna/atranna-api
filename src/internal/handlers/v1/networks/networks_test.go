@@ -27,6 +27,7 @@ func TestNetworks(t *testing.T) {
 		"cidr":    "192.168.1.0/24",
 		"gateway": "192.168.1.1",
 		"vlan":    1,
+		"org_id":  1,
 	}
 	bodyJSON, err := json.Marshal(body)
 	if err != nil {

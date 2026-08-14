@@ -37,6 +37,7 @@ func TestDevices(t *testing.T) {
 
 	req := httptest.NewRequest(http.MethodPost, "/devices", bytes.NewReader(bodyJSON))
 	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("X-Org-ID", "1")
 	w := httptest.NewRecorder()
 
 	router.ServeHTTP(w, req)
@@ -47,6 +48,7 @@ func TestDevices(t *testing.T) {
 
 	// Get devices
 	req = httptest.NewRequest(http.MethodGet, "/devices", nil)
+	req.Header.Set("X-Org-ID", "1")
 	w = httptest.NewRecorder()
 
 	router.ServeHTTP(w, req)

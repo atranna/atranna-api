@@ -6,4 +6,5 @@ type Network struct {
 	CIDR    string `json:"cidr" binding:"required"`
 	Gateway string `json:"gateway" binding:"required"`
 	Vlan    int    `json:"vlan"`
+	OrgID    int   `json:"org_id" binding:"required"`
 }

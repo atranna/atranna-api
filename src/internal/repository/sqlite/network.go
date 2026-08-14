@@ -16,8 +16,8 @@ func NewNetworkRepository(db *sql.DB) *NetworkRepository {
 
 func (r *NetworkRepository) Add(network models.Network) (models.Network, error) {
 	res, err := r.db.Exec(
-		`INSERT INTO networks (name, cidr, gateway, vlan) VALUES (?, ?, ?, ?)`,
-		network.Name, network.CIDR, network.Gateway, network.Vlan,
+		`INSERT INTO networks (name, cidr, gateway, vlan, org_id) VALUES (?, ?, ?, ?, ?)`,
+		network.Name, network.CIDR, network.Gateway, network.Vlan, network.OrgID,
 	)
 	if err != nil {
 		return models.Network{}, err
@@ -28,10 +28,10 @@ func (r *NetworkRepository) Add(network models.Network) (models.Network, error) 
 }
 
 func (r *NetworkRepository) GetByID(id int) (models.Network, bool) {
-	row := r.db.QueryRow(`SELECT id, name, cidr, gateway, vlan FROM networks WHERE id = ?`, id)
+	row := r.db.QueryRow(`SELECT id, name, cidr, gateway, vlan, org_id FROM networks WHERE id = ?`, id)
 	var network models.Network
 	var vlan sql.NullInt64
-	err := row.Scan(&network.ID, &network.Name, &network.CIDR, &network.Gateway, &vlan)
+	err := row.Scan(&network.ID, &network.Name, &network.CIDR, &network.Gateway, &vlan, &network.OrgID)
 	if err != nil {
 		return models.Network{}, false
 	}
@@ -40,7 +40,7 @@ func (r *NetworkRepository) GetByID(id int) (models.Network, bool) {
 }
 
 func (r *NetworkRepository) GetAll() []models.Network {
-	rows, err := r.db.Query(`SELECT id, name, cidr, gateway, vlan FROM networks`)
+	rows, err := r.db.Query(`SELECT id, name, cidr, gateway, vlan, org_id FROM networks`)
 	if err != nil {
 		return []models.Network{}
 	}
@@ -50,7 +50,7 @@ func (r *NetworkRepository) GetAll() []models.Network {
 	for rows.Next() {
 		var network models.Network
 		var vlan sql.NullInt64
-		err := rows.Scan(&network.ID, &network.Name, &network.CIDR, &network.Gateway, &vlan)
+		err := rows.Scan(&network.ID, &network.Name, &network.CIDR, &network.Gateway, &vlan, &network.OrgID)
 		if err != nil {
 			continue
 		}

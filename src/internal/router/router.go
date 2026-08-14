@@ -1,14 +1,15 @@
 package router
 
 import (
+	"github.com/atranna/atranna-api/src/internal/auth"
 	"github.com/atranna/atranna-api/src/internal/config"
 	"github.com/atranna/atranna-api/src/internal/database"
 	"github.com/atranna/atranna-api/src/internal/handlers"
 	v1_devices "github.com/atranna/atranna-api/src/internal/handlers/v1/devices"
 	v1_interfaces "github.com/atranna/atranna-api/src/internal/handlers/v1/interfaces"
 	v1_networks "github.com/atranna/atranna-api/src/internal/handlers/v1/networks"
+	v1_organization_members "github.com/atranna/atranna-api/src/internal/handlers/v1/organization_members"
 	v1_organizations "github.com/atranna/atranna-api/src/internal/handlers/v1/organizations"
-	organizationMembers "github.com/atranna/atranna-api/src/internal/handlers/v1/organzationMembers"
 	v1_users "github.com/atranna/atranna-api/src/internal/handlers/v1/users"
 	"github.com/atranna/atranna-api/src/internal/middlewares"
 	"github.com/atranna/atranna-api/src/internal/repository"
@@ -22,8 +23,8 @@ import (
 func New() *gin.Engine {
 	if !config.Current.Debug {
 		gin.SetMode(gin.ReleaseMode)
-	} 
-	
+	}
+
 	r := gin.Default()
 	r.Use(middlewares.CORSMiddleware())
 
@@ -36,7 +37,7 @@ func New() *gin.Engine {
 	var deviceRepo repository.DeviceRepository
 	var interfaceRepo repository.InterfaceRepository
 	var networkRepo repository.NetworkRepository
-	
+
 	switch config.Current.Storage.Backend {
 	case "memory":
 		organizationRepo = memory.NewOrganizationRepository()
@@ -70,23 +71,23 @@ func New() *gin.Engine {
 		networkRepo = sqlite.NewNetworkRepository(database.DB)
 	}
 
-	organizationHandler := v1_organizations.NewHandler(organizationRepo)
-	usersHandler := v1_users.NewHandler(userRepo)
-	organizationMembersHandler := organizationMembers.NewHandler(organizationMembersRepo)
+	organizationHandler := v1_organizations.NewHandler(organizationRepo, organizationMembersRepo)
+	usersHandler := v1_users.NewHandler(userRepo, organizationMembersRepo)
+	organizationMembersHandler := v1_organization_members.NewHandler(organizationMembersRepo)
 
 	devicesHandler := v1_devices.NewHandler(deviceRepo, interfaceRepo)
 	interfacesHandler := v1_interfaces.NewHandler(interfaceRepo)
 	networksHandler := v1_networks.NewHandler(networkRepo)
 
 	apiV1 := r.Group("/api/v1")
-	apiV1Protected := apiV1.Group("", middlewares.AuthMiddleware())
+	apiV1Protected := apiV1.Group("", middlewares.AuthenticationMiddleware())
 
 	// Organizations
 	organizationsGroup := apiV1Protected.Group("/organizations", middlewares.BlockMasterTokenMiddleware())
 	organizationsGroup.GET("", organizationHandler.GetOrganizations)
 	organizationsGroup.GET("/:id", organizationHandler.GetOrganization)
 	organizationsGroup.POST("", organizationHandler.Add)
-	organizationsGroup.DELETE("/:id", organizationHandler.Delete)
+	organizationsGroup.DELETE("/:id", middlewares.RequireOrganizationPermissionMiddleware(organizationMembersRepo, auth.OrganizationWrite), organizationHandler.Delete)
 
 	// Users
 	usersGroup := apiV1Protected.Group("/users")
@@ -101,30 +102,32 @@ func New() *gin.Engine {
 	authGroup.POST("/login", usersHandler.Login)
 
 	// Organization Members
-	organizationsGroup.GET("/:id/members", organizationMembersHandler.GetOrganizationMembers)
-	organizationsGroup.POST("/:id/members", organizationMembersHandler.AddOrganizationMember)
-	organizationsGroup.DELETE("/:id/members/:user_id", organizationMembersHandler.DeleteOrganizationMember)
+	organizationMembersGroup := apiV1Protected.Group("/organization-members", middlewares.BlockMasterTokenMiddleware(), middlewares.AuthorizationMiddleware(organizationMembersRepo))
+	organizationMembersGroup.GET("", organizationMembersHandler.GetOrganizationMembers)
+	organizationMembersGroup.GET("/:user_id", organizationMembersHandler.GetOrganizationMember)
+	organizationMembersGroup.POST("", organizationMembersHandler.AddOrganizationMember)
+	organizationMembersGroup.DELETE("/:user_id", organizationMembersHandler.DeleteOrganizationMember)
 
 	// Devices
-	devicesGroup := apiV1Protected.Group("/devices", middlewares.BlockMasterTokenMiddleware())
-	devicesGroup.GET("", devicesHandler.GetDevices)
-	devicesGroup.GET("/:id", devicesHandler.GetDevice)
-	devicesGroup.POST("", devicesHandler.Add)
-	devicesGroup.DELETE("/:id", devicesHandler.Delete)
+	devicesGroup := apiV1Protected.Group("/devices", middlewares.BlockMasterTokenMiddleware(), middlewares.AuthorizationMiddleware(organizationMembersRepo))
+	devicesGroup.GET("", middlewares.RequirePermissionMiddleware(auth.DevicesRead), devicesHandler.GetDevices)
+	devicesGroup.GET("/:id", middlewares.RequirePermissionMiddleware(auth.DevicesRead), devicesHandler.GetDevice)
+	devicesGroup.POST("", middlewares.RequirePermissionMiddleware(auth.DevicesWrite), devicesHandler.Add)
+	devicesGroup.DELETE("/:id", middlewares.RequirePermissionMiddleware(auth.DevicesWrite), devicesHandler.Delete)
 
 	// Interfaces
-	interfacesGroup := apiV1Protected.Group("/interfaces", middlewares.BlockMasterTokenMiddleware())
-	interfacesGroup.GET("", interfacesHandler.GetInterfaces)
-	interfacesGroup.GET("/:id", interfacesHandler.GetInterface)
-	interfacesGroup.POST("", interfacesHandler.Add)
-	interfacesGroup.DELETE("/:id", interfacesHandler.Delete)
+	interfacesGroup := apiV1Protected.Group("/interfaces", middlewares.BlockMasterTokenMiddleware(), middlewares.AuthorizationMiddleware(organizationMembersRepo))
+	interfacesGroup.GET("", middlewares.RequirePermissionMiddleware(auth.InterfacesRead), interfacesHandler.GetInterfaces)
+	interfacesGroup.GET("/:id", middlewares.RequirePermissionMiddleware(auth.InterfacesRead), interfacesHandler.GetInterface)
+	interfacesGroup.POST("", middlewares.RequirePermissionMiddleware(auth.InterfacesWrite), interfacesHandler.Add)
+	interfacesGroup.DELETE("/:id", middlewares.RequirePermissionMiddleware(auth.InterfacesWrite), interfacesHandler.Delete)
 
 	// Networks
-	networksGroup := apiV1Protected.Group("/networks", middlewares.BlockMasterTokenMiddleware())
-	networksGroup.GET("", networksHandler.GetNetworks)
-	networksGroup.GET("/:id", networksHandler.GetNetwork)
-	networksGroup.POST("", networksHandler.Add)
-	networksGroup.DELETE("/:id", networksHandler.Delete)
+	networksGroup := apiV1Protected.Group("/networks", middlewares.BlockMasterTokenMiddleware(), middlewares.AuthorizationMiddleware(organizationMembersRepo))
+	networksGroup.GET("", middlewares.RequirePermissionMiddleware(auth.NetworksRead), networksHandler.GetNetworks)
+	networksGroup.GET("/:id", middlewares.RequirePermissionMiddleware(auth.NetworksRead), networksHandler.GetNetwork)
+	networksGroup.POST("", middlewares.RequirePermissionMiddleware(auth.NetworksWrite), networksHandler.Add)
+	networksGroup.DELETE("/:id", middlewares.RequirePermissionMiddleware(auth.NetworksWrite), networksHandler.Delete)
 
 	return r
 }

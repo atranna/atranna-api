@@ -14,9 +14,14 @@ import (
 
 func TestOrganizations(t *testing.T) {
 	organizationRepo := memory.NewOrganizationRepository()
-	handler := NewHandler(organizationRepo)
+	organizationMemberRepo := memory.NewOrganizationMemberRepository()
+	handler := NewHandler(organizationRepo, organizationMemberRepo)
 
 	router := gin.Default()
+	router.Use(func(c *gin.Context) {
+		c.Set("user_id", 1)
+		c.Next()
+	})
 	router.POST("/organizations", handler.Add)
 	router.GET("/organizations", handler.GetOrganizations)
 	router.GET("/organizations/:id", handler.GetOrganization)

@@ -7,7 +7,7 @@ import (
 type DeviceRepository interface {
 	Add(device models.Device) (models.Device, error)
 	GetByID(id int) (models.Device, bool)
-	GetAll() []models.Device
+	GetAll(orgID int) []models.Device
 	Delete(id int) (models.Device, bool)
 }
 
@@ -47,4 +47,5 @@ type OrganizationMemberRepository interface {
 	GetByOrganizationID(organizationID int) ([]models.OrganizationMember, error)
 	GetByUserID(userID int) []models.OrganizationMember
 	Delete(organizationID int, userID int) (models.OrganizationMember, bool)
+	GetRole(organizationID int, userID int) (string, bool)
 }

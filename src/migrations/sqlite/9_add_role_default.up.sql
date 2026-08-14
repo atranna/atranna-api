@@ -1,0 +1,1 @@
+UPDATE organization_members SET role = 'viewer' WHERE role IS NULL OR role = '';

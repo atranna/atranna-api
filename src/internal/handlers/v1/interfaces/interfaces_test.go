@@ -42,6 +42,7 @@ func TestInterfaces(t *testing.T) {
 
 	req := httptest.NewRequest(http.MethodPost, "/devices", bytes.NewReader(bodyJSON))
 	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("X-Org-ID", "1")
 	w := httptest.NewRecorder()
 
 	router.ServeHTTP(w, req)
@@ -58,6 +59,7 @@ func TestInterfaces(t *testing.T) {
 		"mac_address": "00:11:22:33:44:55",
 		"state":       "up",
 		"speed":       1000,
+		"org_id":      1,
 	}
 	bodyJSON, err = json.Marshal(body)
 	if err != nil {
