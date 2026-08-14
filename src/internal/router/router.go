@@ -87,7 +87,7 @@ func New() *gin.Engine {
 	organizationsGroup.GET("", organizationHandler.GetOrganizations)
 	organizationsGroup.GET("/:id", organizationHandler.GetOrganization)
 	organizationsGroup.POST("", organizationHandler.Add)
-	organizationsGroup.DELETE("/:id", organizationHandler.Delete)
+	organizationsGroup.DELETE("/:id", middlewares.RequireOrganizationPermissionMiddleware(organizationMembersRepo, auth.OrganizationWrite), organizationHandler.Delete)
 
 	// Users
 	usersGroup := apiV1Protected.Group("/users")

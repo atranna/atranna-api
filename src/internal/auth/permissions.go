@@ -40,3 +40,19 @@ const OrganizationMembersRead PermissionKey = "organization_members:read"
 const OrganizationMembersWrite PermissionKey = "organization_members:write"
 const RolesRead PermissionKey = "roles:read"
 const RolesWrite PermissionKey = "roles:write"
+
+func RoleHasPermission(role string, key PermissionKey) bool {
+	if role == "owner" {
+		return true
+	}
+	permissions, ok := SystemRoles[role]
+	if !ok {
+		return false
+	}
+	for _, permission := range permissions {
+		if permission == key {
+			return true
+		}
+	}
+	return false
+}

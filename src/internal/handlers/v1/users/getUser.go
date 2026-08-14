@@ -46,6 +46,11 @@ func (h *Handler) GetUser(c *gin.Context) {
 		return
 	}
 
+	requesterOrgs := make(map[int]struct{}, len(requestingUserMemberships))
+	for _, membership := range requestingUserMemberships {
+		requesterOrgs[membership.OrganizationID] = struct{}{}
+	}
+
 	commonOrgID := -1
 	for _, requesterMembership := range requestingUserMemberships {
 		for _, requestedMembership := range requestedUserMemberships {
@@ -64,10 +69,11 @@ func (h *Handler) GetUser(c *gin.Context) {
 		return
 	}
 
-	orgMembers := h.organizationMember.GetByUserID(id)
-	orgs := make([]int, len(orgMembers))
-	for i, om := range orgMembers {
-		orgs[i] = om.OrganizationID
+	orgs := []int{}
+	for _, membership := range requestedUserMemberships {
+		if _, ok := requesterOrgs[membership.OrganizationID]; ok {
+			orgs = append(orgs, membership.OrganizationID)
+		}
 	}
 
 	userWithOrgs := userWithOrgs{
