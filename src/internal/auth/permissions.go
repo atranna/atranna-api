@@ -3,9 +3,9 @@ package auth
 type PermissionKey string
 
 type Permission struct {
-	Key PermissionKey
-	Resource string
-	Action   string
+	Key         PermissionKey
+	Resource    string
+	Action      string
 	Description string
 }
 
@@ -55,4 +55,19 @@ func RoleHasPermission(role string, key PermissionKey) bool {
 		}
 	}
 	return false
+}
+
+func RolePermissions(role string) []PermissionKey {
+	if role == "owner" {
+		permissions := make([]PermissionKey, 0, len(Catalog))
+		for _, permission := range Catalog {
+			permissions = append(permissions, permission.Key)
+		}
+		return permissions
+	}
+	permissions, ok := SystemRoles[role]
+	if !ok {
+		return nil
+	}
+	return permissions
 }
