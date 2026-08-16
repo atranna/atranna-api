@@ -9,7 +9,6 @@ func Load() {
 	// Override configuration with environment variables
 
 	Current.Debug = getEnvAsBool("DEBUG", defaultConfig.Debug)
-	Current.CORS.AllowedOrigins = getEnv("CORS_ALLOWED_ORIGINS", defaultConfig.CORS.AllowedOrigins)
 	Current.Auth.Enable = getEnvAsBool("AUTH_ENABLE", defaultConfig.Auth.Enable)
 	Current.Auth.MasterToken = getEnv("AUTH_MASTER_TOKEN", defaultConfig.Auth.MasterToken)
 	Current.Auth.JWTSecret = getEnv("AUTH_JWT_SECRET", defaultConfig.Auth.JWTSecret)

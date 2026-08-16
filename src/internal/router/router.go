@@ -26,7 +26,6 @@ func New() *gin.Engine {
 	}
 
 	r := gin.Default()
-	r.Use(middlewares.CORSMiddleware())
 
 	r.GET("/ping", handlers.Ping)
 

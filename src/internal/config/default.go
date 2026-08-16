@@ -7,11 +7,6 @@ var defaultConfig = Config{
 	}{
 		Port: "8080",
 	},
-	CORS: struct {
-		AllowedOrigins string
-	}{
-		AllowedOrigins: "http://localhost:5173,http://127.0.0.1:5173,http://localhost:4173,http://127.0.0.1:4173",
-	},
 	Auth: struct {
 		Enable      bool
 		MasterToken string
