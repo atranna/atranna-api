@@ -99,6 +99,7 @@ func New() *gin.Engine {
 	// Auth
 	authGroup := apiV1.Group("/auth")
 	authGroup.POST("/login", usersHandler.Login)
+	authGroup.GET("/validate-token", middlewares.AuthenticationMiddleware(), usersHandler.ValidateToken)
 
 	// Organization Members
 	organizationMembersGroup := apiV1Protected.Group("/organization-members", middlewares.BlockMasterTokenMiddleware(), middlewares.AuthorizationMiddleware(organizationMembersRepo))
